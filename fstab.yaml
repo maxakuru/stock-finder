@@ -2,4 +2,4 @@ mountpoints:
   /: https://drive.google.com/drive/folders/1gLYaXRplrMhMA0vyaLVtKr_jcqXAYE2H
 
 folders:
-  /lookup/bestbuy: /tools/stock/index.html
+  /lookup/bestbuy/: /tools/stock/index.html

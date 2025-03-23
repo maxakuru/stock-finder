@@ -170,12 +170,11 @@ async function renderLookupResults(results) {
 
     locations.forEach(location => {
       let itemLocation = item.locations.find(ploc => ploc.locationId === loc.id);
+      console.warn('location: ', itemLocation, location, locations);
       if (!itemLocation) {
-        console.warn('missing location: ', itemLocation, location, locations);
+        console.warn('missing location');
         itemLocation = {};
       }
-
-      console.log('loc: ', loc);
 
       const pickupQty = itemLocation?.availability?.availablePickupQuantity;
       const inStoreQty = itemLocation?.inStoreAvailability?.availableInStoreQuantity;

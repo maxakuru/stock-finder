@@ -170,9 +170,7 @@ async function renderLookupResults(results) {
 
     locations.forEach(location => {
       let itemLocation = item.locations.find(ploc => ploc.locationId === location.id);
-      console.warn('location: ', itemLocation, location, locations);
       if (!itemLocation) {
-        console.warn('missing location');
         itemLocation = {};
       }
 

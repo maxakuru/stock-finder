@@ -1,7 +1,6 @@
 import { html } from '../../scripts/scripts.js';
 import {
   PERSIST_SEARCH_KEY,
-  VERSION,
   callAPI,
   getPersistedData,
   shouldHalt

@@ -31,3 +31,9 @@
   margin: .4em;
   text-align: center;
 }
+
+@media (width >=900px) {
+  .recent-carousel .carousel {
+    gap: 1em;
+  }
+}

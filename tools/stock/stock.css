@@ -64,8 +64,6 @@ input {
   margin-bottom: 0.4em;
 }
 
-#lookup-results {}
-
 #lookup-results .no-results-message {
   color: red;
 }
@@ -151,11 +149,12 @@ input {
 
 @media (width >=900px) {
   main {
-    margin: 0 auto;
+    margin: calc(var(--nav-height) / 2) auto;
   }
 
   div#lookup .lookup-form {
     flex-direction: row;
+    gap: 2em;
   }
 
   .lookup-form .display #search-image {

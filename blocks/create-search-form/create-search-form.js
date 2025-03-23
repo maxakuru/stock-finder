@@ -25,7 +25,7 @@ export default async function decorate(block) {
 
       <details>
         <summary>
-          <label>Extract info from URL</label>
+          <label>Extract info from product page</label>
         </summary>
         <fieldset id="extract-field" class="horizontal">
           <span class="field">
@@ -39,7 +39,7 @@ export default async function decorate(block) {
         </fieldset>
       </details>      
 
-      <button id="create">Find Stock</button>
+      <button id="create">Create Search</button>
     </form>`
 
   /** @type {HTMLInputElement} */
@@ -54,6 +54,15 @@ export default async function decorate(block) {
   const btn = block.querySelector('button#create');
   /** @type {HTMLButtonElement} */
   const btnExtract = block.querySelector('button#extract');
+  /** @type {HTMLDetailsElement} */
+  const details = block.querySelector('details');
+  /** @type {HTMLLabelElement} */
+  const summaryLabel = details.querySelector('summary>label');
+
+  // allow summary label to open/close details
+  summaryLabel.addEventListener('click', (e) => {
+    details.open = !details.open;
+  });
 
   btn.addEventListener('click', (e) => {
     e.preventDefault();

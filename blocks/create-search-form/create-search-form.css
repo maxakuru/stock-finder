@@ -9,3 +9,7 @@ fieldset.horizontal span.field {
 fieldset.horizontal .controls {
   margin: 0 0 0 0.5em;
 }
+
+details>summary>label {
+  cursor: pointer;
+}

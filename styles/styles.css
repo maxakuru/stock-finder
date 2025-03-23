@@ -297,6 +297,10 @@ main>.section:first-of-type {
 }
 
 @media (width >=900px) {
+  main {
+    margin-top: calc(var(--nav-height) / 2);
+  }
+
   main>.section>div {
     padding: 0 32px;
   }

@@ -1,4 +1,5 @@
 import { html } from '../../scripts/scripts.js';
+import { getPersistedData, PERSIST_SEARCH_KEY, VERSION } from './storage.js';
 
 /**
  * @typedef {import('./types.d').LookupParams} LookupParams
@@ -6,10 +7,8 @@ import { html } from '../../scripts/scripts.js';
  * @typedef {import('./types.d').SearchResults} SearchResults
  */
 
-const AUTH_ENABLED = true;
-const VERSION = 'v0';
 const SUPERUSER_TOKEN_KEY = `superuser-token--${VERSION}`;
-const PERSIST_SEARCH_KEY = `persisted-search--${VERSION}`;
+const AUTH_ENABLED = true;
 const DEV = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 const API_ENDPOINT = DEV
   ? 'http://localhost:8787'
@@ -36,13 +35,7 @@ const btnLookupSubmit = lookupForm.querySelector('button#lookup-submit');
 let _token = localStorage.getItem(SUPERUSER_TOKEN_KEY);
 
 /** @type {PersistedSearchData} */
-let _persisted = JSON.parse(
-  localStorage.getItem(PERSIST_SEARCH_KEY)
-  ?? JSON.stringify({
-    recent: [],
-    searches: {}
-  })
-);
+let _persisted;
 
 /**
  * @param {string} path 
@@ -72,6 +65,10 @@ async function callAPI(path, opts = {}, params = {}) {
  * @returns {Promise<SearchResults>}
  */
 async function fetchStock(retailer, sku, zip) {
+  if (!retailer) {
+    return undefined;
+  }
+
   const resp = await callAPI(`/stock/${retailer}`, undefined, { sku, zip });
   if (resp.ok) {
     return resp.json();
@@ -223,9 +220,10 @@ function isValidZipcode(zip) {
 }
 
 /**
+ * @param {string} retailer
  * @param {LookupParams} params 
  */
-async function persist(params) {
+async function persist(retailer, params) {
   try {
     const { sku, image, title } = params;
     const id = await digest(`${sku}/${title}/${image}`);
@@ -242,7 +240,7 @@ async function persist(params) {
     }
 
     if (touched) {
-      localStorage.setItem(PERSIST_SEARCH_KEY, JSON.stringify(_persisted));
+      localStorage.setItem(PERSIST_SEARCH_KEY(retailer), JSON.stringify(_persisted));
     }
   } catch (e) {
     console.error('failed to persist searches: ', e);
@@ -250,10 +248,11 @@ async function persist(params) {
 }
 
 /**
+ * @param {string} retailer
  * @param {LookupParams} params 
  * @returns {Promise<void>}
  */
-async function renderLookupForm(params) {
+async function renderLookupForm(retailer, params) {
   const {
     sku,
     image,
@@ -262,7 +261,7 @@ async function renderLookupForm(params) {
   } = params;
 
   // save the search to localStorage, if needed
-  persist(params);
+  persist(retailer, params);
 
   // set sku
   inputSku.value = sku || '';
@@ -299,7 +298,7 @@ async function renderLookupForm(params) {
       return;
     }
     btnLookupSubmit.disabled = true;
-    const results = await fetchStock('bestbuy', sku, zipcode);
+    const results = await fetchStock(retailer, sku, zipcode);
     const sparams = new URLSearchParams(location.search);
     sparams.set('zipcode', zipcode);
     window.history.pushState('', '', `?${sparams}`)
@@ -319,16 +318,24 @@ async function renderLookupForm(params) {
   // fetch based on params, if set
   const url = new URL(location.href);
   const params = Object.fromEntries(url.searchParams.entries());
+  let retailer;
 
   // set sku from pathname, if it's there
-  if (/^\/lookup\/[a-z]+\/[a-zA-Z0-9]$/.test(url.pathname)) {
-    const [_, __, sku] = pathname.split('/');
-    params.sku = sku;
+  if (/^\/lookup\/[a-z]+\/[a-zA-Z0-9]+$/.test(url.pathname)) {
+    const parts = url.pathname.split('/').slice(2);
+    retailer = parts[0];
+    params.sku = parts[1];
+    _persisted = getPersistedData(retailer);
+  } else {
+    retailer = params.retailer;
+    _persisted = getPersistedData(params.retailer);
   }
+
+  console.log('params: ', params);
 
   if (params.sku) {
     // looking up a product..
-    return await renderLookupForm(params);
+    return await renderLookupForm(retailer, params);
   }
 
   // otherwise this is to render the "add a search" view

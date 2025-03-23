@@ -1,0 +1,32 @@
+.recent-search-feed .recent-carousel {
+  overflow: scroll;
+}
+
+.recent-carousel .carousel {
+  display: flex;
+  flex-direction: row;
+  flex-flow: nowrap;
+  /* overflow: scroll; */
+  width: calc(5* 200px);
+  margin: 0.6em 0;
+}
+
+.recent-carousel .carousel-item a {
+  display: flex;
+  flex-direction: column;
+}
+
+.carousel-item img {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: contain;
+  margin: auto;
+}
+
+.carousel-item p {
+  font-size: 18px;
+  line-height: 1.2;
+  color: #000;
+  margin: .4em;
+  text-align: center;
+}

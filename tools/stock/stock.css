@@ -1,6 +1,6 @@
 main {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: var(--nav-height) auto;
   min-height: calc(100vh - var(--nav-height));
 }
 
@@ -24,6 +24,12 @@ div#lookup .lookup-form {
 div#lookup .lookup-form .display {
   display: flex;
   justify-content: space-around;
+  align-items: anchor-center;
+}
+
+.lookup-form .display #search-image {
+  max-height: 150px;
+  max-width: 150px;
 }
 
 div#lookup .lookup-form .data-entry {
@@ -81,6 +87,7 @@ input {
 
 #lookup-results thead th.result-qty {
   width: 10%;
+  text-align: center;
 }
 
 #lookup-results thead th.result-cta {
@@ -143,8 +150,17 @@ input {
 }
 
 @media (width >=900px) {
+  main {
+    margin: 0 auto;
+  }
+
   div#lookup .lookup-form {
     flex-direction: row;
+  }
+
+  .lookup-form .display #search-image {
+    max-height: 300px;
+    max-width: 300px;
   }
 
   input {

@@ -169,7 +169,7 @@ async function renderLookupResults(results) {
     resultTable.append(tableBody);
 
     locations.forEach(location => {
-      let itemLocation = item.locations.find(ploc => ploc.locationId === loc.id);
+      let itemLocation = item.locations.find(ploc => ploc.locationId === location.id);
       console.warn('location: ', itemLocation, location, locations);
       if (!itemLocation) {
         console.warn('missing location');

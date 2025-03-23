@@ -1,5 +1,11 @@
 import { html } from '../../scripts/scripts.js';
-import { getPersistedData, PERSIST_SEARCH_KEY, VERSION } from './storage.js';
+import {
+  PERSIST_SEARCH_KEY,
+  VERSION,
+  callAPI,
+  getPersistedData,
+  shouldHalt
+} from './storage.js';
 
 /**
  * @typedef {import('./types.d').LookupParams} LookupParams
@@ -7,13 +13,8 @@ import { getPersistedData, PERSIST_SEARCH_KEY, VERSION } from './storage.js';
  * @typedef {import('./types.d').SearchResults} SearchResults
  */
 
-const SUPERUSER_TOKEN_KEY = `superuser-token--${VERSION}`;
-const AUTH_ENABLED = true;
-const DEV = ['localhost', '127.0.0.1'].includes(window.location.hostname);
-const API_ENDPOINT = DEV
-  ? 'http://localhost:8787'
-  : 'https://api.snormax.com';
-
+/** @type {HTMLTitleElement} */
+const titleEl = document.querySelector('head>title');
 /** @type {HTMLDivElement} */
 const lookupSection = document.querySelector('div#lookup');
 /** @type {HTMLDivElement} */
@@ -31,32 +32,8 @@ const inputZipcode = lookupForm.querySelector('input#zipcode');
 /** @type {HTMLButtonElement} */
 const btnLookupSubmit = lookupForm.querySelector('button#lookup-submit');
 
-/** @type {string|undefined} */
-let _token = localStorage.getItem(SUPERUSER_TOKEN_KEY);
-
 /** @type {PersistedSearchData} */
 let _persisted;
-
-/**
- * @param {string} path 
- * @param {RequestInit} [opts] 
- * @param {Record<string,string>} [params] 
- * @returns {Promise<Response>}
- */
-async function callAPI(path, opts = {}, params = {}) {
-  const pStr = new URLSearchParams(params).toString();
-  const resp = await fetch(`${API_ENDPOINT}${path}${pStr ? `?${pStr}` : ''}`, {
-    ...opts,
-    headers: {
-      ...(opts.headers ?? {}),
-      'authorization': `Bearer ${_token}`
-    }
-  });
-  if (!resp.ok) {
-    console.error('failed to call api: ', resp);
-  }
-  return resp;
-}
 
 /**
  * @param {string} retailer 
@@ -72,48 +49,6 @@ async function fetchStock(retailer, sku, zip) {
   const resp = await callAPI(`/stock/${retailer}`, undefined, { sku, zip });
   if (resp.ok) {
     return resp.json();
-  }
-}
-
-/**
- * check if currently set token is valid
- * @returns {Promise<boolean>}
- */
-async function isTokenValid() {
-  const res = await callAPI('/auth/me');
-  if (res.ok) {
-    return true;
-  }
-  return false;
-}
-
-/**
- * @returns {Promise<boolean>}
- */
-async function shouldHalt() {
-  if (!AUTH_ENABLED) {
-    return false;
-  }
-
-  if (_token && !(await isTokenValid())) {
-    localStorage.removeItem(SUPERUSER_TOKEN_KEY);
-    _token = undefined;
-  }
-  if (!_token) {
-    // get token from input
-    _token = prompt('Please enter your token: ');
-    if (!_token) {
-      alert('access denied');
-      return true;
-    }
-    const valid = await isTokenValid();
-    if (valid) {
-      localStorage.setItem(SUPERUSER_TOKEN_KEY, _token);
-    } else {
-      localStorage.removeItem(SUPERUSER_TOKEN_KEY);
-      location.reload();
-      return true;
-    }
   }
 }
 
@@ -328,10 +263,11 @@ async function renderLookupForm(retailer, params) {
     _persisted = getPersistedData(params.retailer);
   }
 
-  console.log('params: ', params);
+  console.debug('params: ', params);
 
   if (params.sku) {
     // looking up a product..
+    titleEl.innerText.replace('{sku}', sku);
     return await renderLookupForm(retailer, params);
   }
 

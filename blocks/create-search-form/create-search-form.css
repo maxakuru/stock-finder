@@ -1,0 +1,11 @@
+fieldset.horizontal {
+  display: flex;
+}
+
+fieldset.horizontal span.field {
+  width: 90%;
+}
+
+fieldset.horizontal .controls {
+  margin: 0 0 0 0.5em;
+}

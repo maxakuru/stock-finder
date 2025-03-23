@@ -194,6 +194,14 @@ label {
   color: #5b5252;
 }
 
+summary label {
+  display: inline;
+}
+
+summary::marker {
+  margin-top: 2px;
+}
+
 input {
   max-width: calc(100% - 8px);
   margin-bottom: 0.4em;

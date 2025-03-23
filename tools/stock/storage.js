@@ -1,5 +1,5 @@
 export const VERSION = 'v0';
-export const AUTH_ENABLED = true;
+export const AUTH_ENABLED = false;
 export const DEV = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 export const API_ENDPOINT = DEV
   ? 'http://localhost:8787'

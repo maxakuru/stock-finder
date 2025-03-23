@@ -1,0 +1,161 @@
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - var(--nav-height));
+}
+
+.stock-tool div#lookup {
+  display: none;
+}
+
+h2#search-title {
+  margin-top: 0.2em;
+}
+
+div#lookup .lookup-form {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  padding: 1.5em;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+}
+
+div#lookup .lookup-form .display {
+  display: flex;
+  justify-content: space-around;
+}
+
+div#lookup .lookup-form .data-entry {
+  min-width: 250px;
+}
+
+.lookup-form form .form-controls {
+  margin: 0.6em 0;
+}
+
+label,
+input,
+button {
+  width: 100%;
+}
+
+label,
+input {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  line-height: 1.4;
+  font-weight: 500;
+  font-size: 16px;
+  color: #5b5252;
+}
+
+input {
+  max-width: calc(100% - 8px);
+  margin-bottom: 0.4em;
+}
+
+#lookup-results {}
+
+#lookup-results .no-results-message {
+  color: red;
+}
+
+#lookup-results table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#lookup-results thead th.result-id {
+  width: 10%;
+  display: none;
+}
+
+#lookup-results thead th.result-addr {
+  width: 15%;
+}
+
+#lookup-results thead th.result-qty {
+  width: 10%;
+}
+
+#lookup-results thead th.result-cta {
+  width: 10%;
+}
+
+#lookup-results tbody td.result-id {
+  width: 10%;
+  display: none;
+}
+
+#lookup-results tbody td span.result-mobile-id {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+#lookup-results th,
+#lookup-results td {
+  text-align: left;
+  padding: 1em;
+}
+
+#lookup-results td.result-qty {
+  text-align: center;
+}
+
+#lookup-results td.result-qty.in-stock {
+  color: #0ba700;
+  font-weight: 600;
+}
+
+#lookup-results td.result-qty.out-of-stock {
+  color: #c30000;
+}
+
+#lookup-results tr.result-row:not(.row-header):nth-child(odd) {
+  background-color: #f4f4f4;
+}
+
+@media (width >=500px) {
+  div#lookup .lookup-form .data-entry {
+    min-width: 300px;
+  }
+
+  #lookup-results thead th.result-addr {
+    width: 30%;
+  }
+
+  #lookup-results thead th.result-id {
+    display: table-cell;
+  }
+
+  #lookup-results tbody td.result-id {
+    display: table-cell;
+  }
+
+  #lookup-results tbody td span.result-mobile-id {
+    display: none
+  }
+}
+
+@media (width >=900px) {
+  div#lookup .lookup-form {
+    flex-direction: row;
+  }
+
+  input {
+    margin-bottom: 0.6em;
+  }
+
+  .lookup-form form .form-controls {
+    margin: 0.8em 0;
+  }
+
+  #lookup-results thead th.result-addr {
+    width: 60%;
+  }
+}

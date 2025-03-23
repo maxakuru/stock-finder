@@ -13,6 +13,43 @@ import {
   loadCSS,
 } from './aem.js';
 
+function el(str) {
+  const content = typeof str !== 'string' ? '' : str;
+  const tmp = document.createElement('div');
+  tmp.innerHTML = content;
+  return tmp.firstElementChild;
+};
+
+/**
+ * HTML string template tag
+ * @param {string[]} strs
+ * @param  {...(string|Element)} params
+ */
+function htmlstr(strs, ...params) {
+  let res = '';
+  strs.forEach((s, i) => {
+    const p = params[i];
+    res += s;
+    if (!p) return;
+    if (p instanceof HTMLElement) {
+      res += p.outerHTML;
+    } else {
+      res += p;
+    }
+  });
+  return res;
+}
+
+/**
+ * HTML element template tag
+ * @param {string[]} strs
+ * @param {} params
+ * @returns {HTMLElement}
+ */
+export function html(strs, ...params) {
+  return el(htmlstr(strs, ...params));
+}
+
 /**
  * Builds hero block and prepends to main in a new section.
  * @param {Element} main The container element

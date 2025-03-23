@@ -15,9 +15,33 @@
 <body class="stock-tool">
   <header></header>
   <main>
-    <div>
-      <h1>xyz</h1>
+    <div class="main">
+      <!-- LOOKUP VIEW -->
+      <div id="lookup">
+        <div class="lookup-form">
+          <div class="display">
+            <img id="search-image" src="" />
+          </div>
+          <div class="data-entry">
+            <h2 id="search-title">placeholder</h2>
+            <form>
+              <label for="sku">SKU</label>
+              <input id="sku" name="sku" placeholder="" disabled />
+
+              <label for="zipcode">Zipcode</label>
+              <input id="zipcode" name="zipcode" type="number" pattern="\d{5}" placeholder="Enter your zipcode"
+                required />
+
+              <div class="form-controls">
+                <button id="lookup-submit">Search</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div id="lookup-results"></div>
+      </div>
     </div>
+    <!-- / LOOKUP VIEW -->
 
   </main>
   <footer></footer>

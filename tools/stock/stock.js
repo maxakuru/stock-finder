@@ -168,17 +168,17 @@ async function renderLookupResults(results) {
     const tableBody = html`<table><tbody></tbody></table>`.firstElementChild;
     resultTable.append(tableBody);
 
-    item.locations.forEach(loc => {
-      let location = locations.find(ploc => ploc.id === loc.locationId);
-      if (!location) {
-        console.warn('missing location: ', loc, locations);
-        location = {};
+    locations.forEach(location => {
+      let itemLocation = item.locations.find(ploc => ploc.locationId === loc.id);
+      if (!itemLocation) {
+        console.warn('missing location: ', itemLocation, location, locations);
+        itemLocation = {};
       }
 
       console.log('loc: ', loc);
 
-      const pickupQty = loc?.availability?.availablePickupQuantity;
-      const inStoreQty = loc?.inStoreAvailability?.availableInStoreQuantity;
+      const pickupQty = itemLocation?.availability?.availablePickupQuantity;
+      const inStoreQty = itemLocation?.inStoreAvailability?.availableInStoreQuantity;
       if (pickupQty && inStoreQty && pickupQty !== inStoreQty) {
         console.warn('mismatched quantity: ', loc);
       }

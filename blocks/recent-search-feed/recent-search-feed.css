@@ -6,14 +6,15 @@
   display: flex;
   flex-direction: row;
   flex-flow: nowrap;
-  /* overflow: scroll; */
   width: calc(5* 200px);
-  margin: 0.6em 0;
+  margin: 1em 0;
+  gap: .2em;
 }
 
 .recent-carousel .carousel-item a {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .carousel-item img {

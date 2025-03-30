@@ -1,6 +1,7 @@
 import { html } from '../../scripts/scripts.js';
 import {
   PERSIST_SEARCH_KEY,
+  SESSION_KEY_ZIP,
   callAPI,
   getPersistedData,
   shouldHalt
@@ -30,9 +31,24 @@ const inputSku = lookupForm.querySelector('input#sku');
 const inputZipcode = lookupForm.querySelector('input#zipcode');
 /** @type {HTMLButtonElement} */
 const btnLookupSubmit = lookupForm.querySelector('button#lookup-submit');
+/** @type {HTMLLinkElement} */
+const btnOpenPDP = document.querySelector('a#form-action-open');
+/** @type {HTMLLinkElement} */
+const btnShareSearch = document.querySelector('a#form-action-share');
 
 /** @type {PersistedSearchData} */
 let _persisted;
+
+const PDP_URL = (retailer, sku) => {
+  switch (retailer) {
+    case 'target':
+      return `https://www.target.com/p/urlkey/-/A-${sku}`;
+    case 'bestbuy':
+      return `https://www.bestbuy.com/site/urlkey/${sku}.p?skuId=${sku}`;
+    default:
+      return '#';
+  }
+}
 
 /**
  * @param {string} retailer 
@@ -118,9 +134,9 @@ async function renderLookupResults(results) {
       if (Number.isNaN(qty)) {
         qty = 0;
       }
-      const { id, address, city, state, latitude, longitude } = location;
+      const { id, address, city, state, zipCode } = location;
 
-      // ID | Address, City, State | Quantity (phone#, mapLink) 
+      // ID | Address, City, State | Quantity (mapLink) 
       const row = html`\
       <table>
         <tr class="result-row">
@@ -131,7 +147,7 @@ async function renderLookupResults(results) {
           </td>
           <td class="result-qty ${qty > 0 ? 'in' : 'out-of'}-stock">${String(qty)}</td>
           <td class="result-cta">
-            (<a target="_blank" rel="noopener noreferrer" href="https://maps.google.com/?q=${latitude},${longitude}">Map</a>)
+            (<a target="_blank" rel="noopener noreferrer" href="https://maps.google.com/?q=${address} ${city} ${state} ${zipCode}">Map</a>)
           </td>
         </tr>
       </table>`.firstElementChild.firstElementChild;
@@ -191,6 +207,9 @@ async function renderLookupForm(retailer, params) {
     zipcode: pzipcode
   } = params;
 
+  // update pdp link
+  btnOpenPDP.href = PDP_URL(retailer, sku);
+
   // save the search to localStorage, if needed
   persist(retailer, params);
 
@@ -214,6 +233,9 @@ async function renderLookupForm(retailer, params) {
   if (pzipcode && isValidZipcode(pzipcode)) {
     inputZipcode.value = pzipcode;
     setTimeout(() => btnLookupSubmit.click());
+  } else if (!pzipcode) {
+    // not set from params, try to pull from session
+    inputZipcode.value = inputZipcode.value || sessionStorage.getItem(SESSION_KEY_ZIP) || '';
   }
 
   // attach form
@@ -228,6 +250,8 @@ async function renderLookupForm(retailer, params) {
       }, { once: true });
       return;
     }
+    // store zipcode in session
+    sessionStorage.setItem(SESSION_KEY_ZIP, zipcode);
     btnLookupSubmit.disabled = true;
     const results = await fetchStock(retailer, sku, zipcode);
     const sparams = new URLSearchParams(location.search);
@@ -235,6 +259,12 @@ async function renderLookupForm(retailer, params) {
     window.history.pushState('', '', `?${sparams}`)
     renderLookupResults(results);
     btnLookupSubmit.disabled = false;
+  });
+
+  // attach share link
+  btnShareSearch.addEventListener('click', (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(window.location.href);
   });
 
   // make visible

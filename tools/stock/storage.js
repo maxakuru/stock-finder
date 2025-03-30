@@ -7,6 +7,8 @@ export const API_ENDPOINT = DEV
 
 const SUPERUSER_TOKEN_KEY = `superuser-token--${VERSION}`;
 
+export const SESSION_KEY_ZIP = `zipcode--${VERSION}`;
+
 /** @param {string} */
 export const PERSIST_SEARCH_KEY = (retailer) => `persisted-search--${retailer}--${VERSION}`;
 

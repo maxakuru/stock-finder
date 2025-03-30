@@ -1,12 +1,26 @@
 import { readBlockConfig } from "../../scripts/aem.js";
 import { callAPI, shouldHalt } from "../../tools/stock/storage.js";
 
+const EXPECTS_SKU = {
+  target: '8-digit number',
+  bestbuy: '7-digit number'
+}
+
+const isValidSku = (retailer, sku) => {
+  if (retailer === 'target') {
+    return /\d{8}/.test(sku);
+  } else if (retailer === 'bestbuy') {
+    return /\d{7}/.test(sku);
+  }
+  return true;
+}
+
 /**
  * @param {HTMLDivElement} block 
  */
 export default async function decorate(block) {
   const config = readBlockConfig(block);
-
+  block.classList.add(`retailer-${config.retailer}`);
   block.innerHTML = '';
   if (await shouldHalt()) {
     return;
@@ -23,7 +37,7 @@ export default async function decorate(block) {
       <label for="image">Image URL</label>
       <input id="image"></input>
 
-      <details>
+      <details class="disable-target">
         <summary>
           <label>Extract info from product page</label>
         </summary>
@@ -70,8 +84,12 @@ export default async function decorate(block) {
     const title = titleInput.value ?? '';
 
     const sku = skuInput.value;
-    if (!sku) {
-      skuInput.setCustomValidity('SKU is required');
+    if (!sku || !isValidSku(sku)) {
+      if (!sku) {
+        skuInput.setCustomValidity('SKU is required');
+      } else {
+        skuInput.setCustomValidity(`Not a valid SKU, expecting ${EXPECTS_SKU[retailer]}`);
+      }
       skuInput.addEventListener('input', () => {
         skuInput.setCustomValidity('');
       }, { once: true });

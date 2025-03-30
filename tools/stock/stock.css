@@ -9,7 +9,8 @@ main {
 }
 
 h2#search-title {
-  margin-top: 0.2em;
+  margin-top: 0.6em;
+  font-size: 1.4em;
 }
 
 div#lookup .lookup-form {
@@ -19,6 +20,20 @@ div#lookup .lookup-form {
   padding: 1.5em;
   background-color: #f4f4f4;
   border-radius: 10px;
+  position: relative;
+}
+
+div#lookup .form-actions {
+  position: absolute;
+  right: 0.6em;
+  top: 0.5em;
+  display: flex;
+  width: 42px;
+  justify-content: space-between;
+}
+
+.form-actions a#form-action-open {
+  padding-top: 1px;
 }
 
 div#lookup .lookup-form .display {
@@ -152,9 +167,20 @@ input {
     margin: calc(var(--nav-height) / 2) auto;
   }
 
+  h2#search-title {
+    margin-top: 0.2em;
+    font-size: 2em;
+  }
+
   div#lookup .lookup-form {
     flex-direction: row;
     gap: 2em;
+  }
+
+  div#lookup .form-actions {
+    right: 0.8em;
+    top: 1em;
+    width: 42px;
   }
 
   .lookup-form .display #search-image {

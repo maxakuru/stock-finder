@@ -30,12 +30,12 @@ export interface SearchResultLocation {
   state: string;
   zipCode: string;
   phone: string;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   timeZoneId: string;
   distance: number;
-  openTimesMap: DayTimeMap;
-  closeTimesMap: DayTimeMap;
+  openTimesMap?: DayTimeMap;
+  closeTimesMap?: DayTimeMap;
 }
 
 export interface SearchResultItemLocation {
@@ -46,15 +46,15 @@ export interface SearchResultItemLocation {
   inStoreAvailability: {
     availableInStoreQuantity: number;
   };
-  onShelfDisplay: boolean;
+  onShelfDisplay?: boolean;
 }
 
 export interface SearchResultItem {
   sku: string;
-  ispuEligible: boolean;
-  pickupEligible: boolean;
+  ispuEligible?: boolean;
+  pickupEligible?: boolean;
   inStoreAvailable: boolean;
-  inStoreOnly: boolean;
+  inStoreOnly?: boolean;
   locations: SearchResultItemLocation[];
 }
 

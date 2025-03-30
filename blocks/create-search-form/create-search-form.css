@@ -13,3 +13,7 @@ fieldset.horizontal .controls {
 details>summary>label {
   cursor: pointer;
 }
+
+.block.create-search-form.retailer-target .disable-target {
+  display: none;
+}

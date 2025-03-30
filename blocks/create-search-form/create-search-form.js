@@ -2,15 +2,15 @@ import { readBlockConfig } from "../../scripts/aem.js";
 import { callAPI, shouldHalt } from "../../tools/stock/storage.js";
 
 const EXPECTS_SKU = {
-  target: '8-digit number',
+  target: '8-digit number', // ignore the 10 digits that are allowed, since those seem to be 3rd party
   bestbuy: '7-digit number'
 }
 
 const isValidSku = (retailer, sku) => {
   if (retailer === 'target') {
-    return /\d{8}/.test(sku);
+    return /^\d{8,10}$/.test(sku);
   } else if (retailer === 'bestbuy') {
-    return /\d{7}/.test(sku);
+    return /^\d{7}$/.test(sku);
   }
   return true;
 }

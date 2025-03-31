@@ -13,6 +13,8 @@ import {
   loadCSS,
 } from './aem.js';
 
+window.SAMPLE_PAGEVIEWS_AT_RATE = 'high';
+
 function el(str) {
   const content = typeof str !== 'string' ? '' : str;
   const tmp = document.createElement('div');

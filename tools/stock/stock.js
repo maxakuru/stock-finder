@@ -127,7 +127,7 @@ async function renderLookupResults(results) {
       const pickupQty = itemLocation?.availability?.availablePickupQuantity;
       const inStoreQty = itemLocation?.inStoreAvailability?.availableInStoreQuantity;
       if (pickupQty && inStoreQty && pickupQty !== inStoreQty) {
-        console.warn('mismatched quantity: ', loc);
+        console.warn('mismatched quantity: ', location);
       }
 
       let qty = Math.max(pickupQty, inStoreQty) ?? 0;

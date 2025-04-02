@@ -1,7 +1,8 @@
 export const VERSION = 'v0';
 export const AUTH_ENABLED = false;
 export const DEV = ['localhost', '127.0.0.1'].includes(window.location.hostname);
-export const API_ENDPOINT = DEV
+export const REMOTE_DEV = window.location.host.endsWith(':3001');
+export const API_ENDPOINT = DEV && !REMOTE_DEV
   ? 'http://localhost:8787'
   : 'https://api.snormax.com';
 

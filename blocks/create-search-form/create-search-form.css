@@ -17,3 +17,11 @@ details>summary>label {
 .block.create-search-form.retailer-target .disable-target {
   display: none;
 }
+
+.block.create-search-form.retailer-gamestop .disable-gamestop {
+  display: none;
+}
+
+.block.create-search-form.retailer-bestbuy .disable-bestbuy {
+  display: none;
+}

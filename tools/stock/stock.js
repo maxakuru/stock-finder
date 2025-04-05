@@ -62,9 +62,17 @@ async function fetchStock(retailer, sku, zip) {
   }
 
   const resp = await callAPI(`/stock/${retailer}`, undefined, { sku, zip });
-  if (resp.ok) {
-    return resp.json();
+  if (!resp.ok) {
+    return null;
   }
+  const data = await resp.json();
+  if (retailer === 'gamestop') {
+    // adapt data on client
+    const { default: adapter } = await import('./adapters/gamestop.js');
+    return adapter(data);
+  }
+  return data;
+
 }
 
 /**

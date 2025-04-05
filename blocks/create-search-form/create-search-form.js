@@ -37,7 +37,7 @@ export default async function decorate(block) {
       <label for="image">Image URL</label>
       <input id="image"></input>
 
-      <details class="disable-target">
+      <details class="disable-target disable-gamestop">
         <summary>
           <label>Extract info from product page</label>
         </summary>

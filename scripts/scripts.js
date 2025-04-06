@@ -13,6 +13,41 @@ import {
   loadCSS,
 } from './aem.js';
 
+export const TOAST_DURATION = 4000;
+
+const w = window;
+const d = document;
+
+/**
+ * @template {Function} T
+ * @param {T} fn
+ * @param {number} [time=600]
+ * @returns {T}
+ */
+export function debounce(fn, time = 600) {
+  let timer;
+  return (...args) => {
+    if (timer) {
+      clearTimeout(timer);
+      timer = undefined;
+    }
+    timer = setTimeout(() => fn(...args), time);
+  };
+}
+
+/**
+ * @param {HTMLElement} elem
+ * @param {(e: MouseEvent) => void} cb
+ * @returns {()=>void} remover fn
+ */
+export function onOutsideClick(elem, cb) {
+  const h = ev => {
+    if (!elem.contains(ev.target)) cb(ev);
+  };
+  d.addEventListener('click', h);
+  return () => d.removeEventListener('click', h);
+}
+
 function el(str) {
   const content = typeof str !== 'string' ? '' : str;
   const tmp = document.createElement('div');
@@ -49,6 +84,89 @@ function htmlstr(strs, ...params) {
 export function html(strs, ...params) {
   return el(htmlstr(strs, ...params));
 }
+
+/**
+ * @type {(
+ *  msg: string, 
+ *  lvl?: string, 
+ *  opts?: { isPop?: boolean; duration?: number; }
+ * ) => void} msg
+ */
+export const toast = (() => {
+  /** @type {HTMLDivElement} */
+  let _tc;
+  /** @type {HTMLDivElement[]} */
+  let _ts = [];
+  let _timedOutPop;
+  const updateTop = () => {
+    const dEl = d.documentElement;
+    let hHeight = 0;
+    if (d.querySelector('header')) {
+      hHeight = d.querySelector('header').clientHeight;
+    }
+    const pHeight = parseInt(getComputedStyle(dEl).getPropertyValue('--toast-top-pad').trim().slice(0, -2), 10) || 0;
+    _tc.style.top = `calc(${Math.max(hHeight + pHeight - dEl.scrollTop, 0)}px)`;
+  };
+  const prep = () => {
+    _tc = html`<div class="toast-container"></div>`;
+    if (d.body.querySelector('main')) {
+      d.body.querySelector('main').prepend(_tc);
+    }
+    updateTop();
+    d.addEventListener('scroll', debounce(updateTop, 100));
+  };
+  const cleanup = () => {
+    if (!_ts.filter(t => !!t).length) {
+      _ts = [];
+    }
+  };
+  const pop = id => () => {
+    const rm = _ts[id];
+    if (!rm) return;
+    _ts[id] = undefined;
+    rm.style.marginTop = `-${rm.clientHeight + 5}px`;
+    setTimeout(() => {
+      _tc.style.display = 'none';
+      rm.remove();
+      cleanup();
+    }, 499);
+  };
+  return (msg, lvl = 'info', { isPop = true, duration = TOAST_DURATION } = {}) => {
+    if (!msg) log.warn('toast added without message');
+    if (!_tc) {
+      prep();
+    } else {
+      _tc.style.removeProperty('display');
+    }
+    const t = html`<div class="toast ${lvl}"><p>${msg}</p></div>`;
+    _ts[0] = t;
+    while (_tc.firstChild) {
+      _tc.removeChild(_tc.firstChild);
+      clearTimeout(_timedOutPop);
+    }
+    _tc.appendChild(t);
+    if (isPop) {
+      _timedOutPop = setTimeout(pop(0), duration);
+    }
+    return () => setTimeout(pop(0), 10);
+  };
+})();
+w.toast = toast;
+
+/** make loading spinner */
+export const loader = (classes = '', dataTestId = '') => html` <div data-testid="${dataTestId}" class="loader ${classes}">
+  <div class="loader-progress"></div>
+</div>`;
+
+/** toggle loading spinner */
+export const toggleLoader = (currentBlock, loaderName, flag) => {
+  const loaderElement = currentBlock.querySelector(`.${loaderName}`);
+  loaderElement.style.visibility = flag ? 'visible' : 'hidden';
+};
+
+export const widgetLoader = (classes = '', dataTestId = '') => html` <div data-testid="${dataTestId}" class="widget-loader-wrapper ${classes}">
+  <div class="widget-loader-progress"></div>
+</div>`;
 
 /**
  * Builds hero block and prepends to main in a new section.

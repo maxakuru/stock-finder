@@ -18,6 +18,10 @@
   --text-color: #131313;
   --link-color: #3b63fb;
   --link-hover-color: #1d3ecf;
+  --color-error: #EE7B7B;
+  --color-warning: #9D5306;
+  --color-success: #2D7966;
+  --color-info: #505050;
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback, sans-serif;
@@ -38,6 +42,10 @@
 
   /* nav height */
   --nav-height: 64px;
+
+  /* additional padding if needed by blocks */
+  /* stylelint-disable-next-line length-zero-no-unit */
+  --toast-top-pad: 0px;
 }
 
 /* fallback fonts */
@@ -294,6 +302,134 @@ main>.section>div {
 
 main>.section:first-of-type {
   margin-top: 0;
+}
+
+/* Loader */
+.loader-wrapper {
+  position: relative;
+}
+
+.loader {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: min(100%, 100vh);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.loader-progress {
+  position: relative;
+  aspect-ratio: 1;
+  height: 50%;
+  max-height: 35px;
+  width: auto;
+  border-radius: 50%;
+  background-color: #1d3ecf;
+  color: #3b63fb;
+  animation: loader-progress 1s infinite linear alternate;
+  animation-delay: 0.5s;
+}
+
+.loader-progress::before,
+.loader-progress::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+
+.loader-progress::before {
+  left: calc(-100% - 50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #1d3ecf;
+  color: #3b63fb;
+  animation: loader-progress 1s infinite alternate;
+  animation-delay: 0s;
+}
+
+.loader-progress::after {
+  left: calc(100% + 50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #1d3ecf;
+  color: #3b63fb;
+  animation: loader-progress 1s infinite alternate;
+  animation-delay: 1s;
+}
+
+/* toasts */
+main .toast-container {
+  display: flex;
+  position: fixed;
+  left: 0;
+  right: 0;
+  min-height: 40px;
+  align-items: center;
+  flex-direction: column;
+  margin: 0;
+  overflow-y: hidden;
+  top: calc(var(--nav-height) + var(--toast-top-pad));
+  transition: top 0.3s;
+  z-index: 1;
+}
+
+main .toast-container .toast {
+  padding: 12px 16px;
+  min-width: 50%;
+  width: 100%;
+  margin: 0 0 5px;
+  transition: margin-top 0.5s;
+}
+
+main .toast-container .toast.error {
+  background: var(--color-error);
+}
+
+main .toast-container .toast.success {
+  background: var(--color-success);
+}
+
+main .toast-container .toast.warning {
+  background: var(--color-warning);
+}
+
+main .toast-container .toast.info {
+  background: var(--color-info);
+}
+
+main .toast p {
+  text-align: center;
+  margin: 0;
+  color: #fff;
+  font-weight: 700;
+}
+
+main .modal-overlay {
+  background-color: rgb(0 0 0 / 50%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+@keyframes loader-progress {
+  0% {
+    background-color: #1d3ecf;
+  }
+
+  50%,
+  100% {
+    background-color: #1d3ecf;
+  }
 }
 
 @media (width >=900px) {

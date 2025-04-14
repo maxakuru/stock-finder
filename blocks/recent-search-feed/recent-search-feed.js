@@ -17,7 +17,7 @@ const carouselItem = (retailer, item) => {
     <div class="carousel-item">
       <a class="search-link" href="/lookup/${retailer}/${sku}?${params}">
         <img src="${image}"/>
-        <p>${title}</p>
+        <p>${title || sku}</p>
       </a>
     </div>`;
 

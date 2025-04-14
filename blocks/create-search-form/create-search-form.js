@@ -6,6 +6,12 @@ const EXPECTS_SKU = {
   bestbuy: '7-digit number'
 }
 
+const SKU_LENGTHS = {
+  target: 8,
+  bestbuy: 7,
+  gamestop: 6
+}
+
 const isValidSku = (retailer, sku) => {
   if (retailer === 'target') {
     return /^\d{8,10}$/.test(sku);
@@ -26,16 +32,18 @@ export default async function decorate(block) {
     return;
   }
 
+  const skuPlaceholder = new Array(SKU_LENGTHS[config.retailer] ?? 6).fill(0).map((_, i) => i + 1).join('');
+
   block.innerHTML = `\
     <form>
       <label for="sku">SKU</label>
-      <input id="sku" required></input>
+      <input id="sku" required placeholder="${skuPlaceholder}"></input>
 
       <label for="title">Title</label>
-      <input id="title"></input>
+      <input id="title" placeholder="Optional friendly title"></input>
 
       <label for="image">Image URL</label>
-      <input id="image"></input>
+      <input id="image" placeholder="https://example.com/image.png"></input>
 
       <details class="disable-target disable-gamestop">
         <summary>
@@ -44,7 +52,7 @@ export default async function decorate(block) {
         <fieldset id="extract-field" class="horizontal">
           <span class="field">
             <label for="url">Product URL</label>
-            <input id="url" required></input>
+            <input id="url" required placeholder="https://www.bestbuy.com/site/sku/6624827.p?skuId=6624827"></input>
           </span>
 
           <div class="controls">

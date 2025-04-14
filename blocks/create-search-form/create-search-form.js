@@ -57,7 +57,7 @@ export default async function decorate(block) {
 
       <span class="disable-gamestop disable-bestbuy">
         <div class="notes">
-          <p class="error">Note: Target stock numbers are inaccurate for Pokemon cards, as their supplier does not update inventory numbers.</p>
+          <p class="error"><b>Note:</b> Target stock numbers are inaccurate for <b>Pokemon cards</b>, as their supplier does not update inventory numbers.</p>
         </div>
       </span>
     </form>`

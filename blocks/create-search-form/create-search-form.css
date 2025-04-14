@@ -28,6 +28,8 @@ div.notes::before {
 div.notes p {
   margin: 0.25em;
   margin-inline-start: 0.8em;
+  line-height: 1.2;
+  font-size: 0.8em;
 }
 
 div.notes p.error {
@@ -44,4 +46,10 @@ div.notes p.error {
 
 .block.create-search-form.retailer-bestbuy .disable-bestbuy {
   display: none;
+}
+
+@media (width >=900px) {
+  div.notes p {
+    font-size: 1em;
+  }
 }

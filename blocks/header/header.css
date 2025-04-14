@@ -39,6 +39,10 @@ header nav[aria-expanded='true'] {
   min-height: 100dvh;
 }
 
+header nav .nav-tools ul {
+  list-style-type: none;
+}
+
 @media (width >=900px) {
   header {
     position: unset;

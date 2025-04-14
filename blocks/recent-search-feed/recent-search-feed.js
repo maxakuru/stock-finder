@@ -2,6 +2,8 @@ import { readBlockConfig } from "../../scripts/aem.js";
 import { html } from "../../scripts/scripts.js";
 import { getPersistedData } from "../../tools/stock/storage.js";
 
+const RECENT_ITEM_LIMIT = 12; // max items to show
+
 /**
  * @param {import("../../tools/stock/types.js").PersistedSearchData['searches'][string]} item 
  * @returns {HTMLDivElement}
@@ -46,7 +48,7 @@ export default function decorate(block) {
 
   const data = getPersistedData(config.retailer);
   console.log(`retrieved persisted for ${config.retailer}: `, data);
-  const recent = data.recent.slice(0, 8); // max 8 items
+  const recent = data.recent.slice(0, RECENT_ITEM_LIMIT);
   const items = recent.map(id => carouselItem(config.retailer, data.searches[id])).filter(Boolean);
 
   if (!items.length) {

@@ -2,6 +2,11 @@
   overflow: scroll;
 }
 
+.recent-carousel h3 {
+  position: sticky;
+  left: 0;
+}
+
 .recent-carousel .carousel {
   display: flex;
   flex-direction: row;

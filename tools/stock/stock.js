@@ -1,9 +1,9 @@
 import { html, toast } from '../../scripts/scripts.js';
 import {
-  PERSIST_SEARCH_KEY,
   SESSION_KEY_ZIP,
   callAPI,
   getPersistedData,
+  persist,
   shouldHalt
 } from './storage.js';
 
@@ -35,9 +35,6 @@ const btnLookupSubmit = lookupForm.querySelector('button#lookup-submit');
 const btnOpenPDP = document.querySelector('a#form-action-open');
 /** @type {HTMLLinkElement} */
 const btnShareSearch = document.querySelector('a#form-action-share');
-
-/** @type {PersistedSearchData} */
-let _persisted;
 
 const PDP_URL = (retailer, sku) => {
   switch (retailer) {
@@ -73,20 +70,6 @@ async function fetchStock(retailer, sku, zip) {
   }
   return data;
 
-}
-
-/**
- * @param {string} str
- * @param {string} algo
- * @returns {Promise<string>}
- */
-export async function digest(str, algo = 'SHA-1') {
-  return Array.from(
-    new Uint8Array(
-      await crypto.subtle.digest(algo, new TextEncoder().encode(str)),
-    ),
-    (byte) => byte.toString(16).padStart(2, '0'),
-  ).join('');
 }
 
 /**
@@ -172,34 +155,6 @@ async function renderLookupResults(results) {
  */
 function isValidZipcode(zip) {
   return /^\d{5}$/.test(zip);
-}
-
-/**
- * @param {string} retailer
- * @param {LookupParams} params 
- */
-async function persist(retailer, params) {
-  try {
-    const { sku, image, title } = params;
-    const id = await digest(`${sku}/${title}/${image}`);
-
-    let touched = false;
-    if (!_persisted.searches[id]) {
-      touched = true;
-      _persisted.searches[id] = { sku, image, title };
-    }
-
-    if (_persisted.recent[0] !== id) {
-      touched = true;
-      _persisted.recent = [...new Set([id, ..._persisted.recent])];
-    }
-
-    if (touched) {
-      localStorage.setItem(PERSIST_SEARCH_KEY(retailer), JSON.stringify(_persisted));
-    }
-  } catch (e) {
-    console.error('failed to persist searches: ', e);
-  }
 }
 
 /**
@@ -294,10 +249,10 @@ async function renderLookupForm(retailer, params) {
     const parts = url.pathname.split('/').slice(2);
     retailer = parts[0];
     params.sku = parts[1];
-    _persisted = getPersistedData(retailer);
+    getPersistedData(retailer);
   } else {
     retailer = params.retailer;
-    _persisted = getPersistedData(params.retailer);
+    getPersistedData(params.retailer);
   }
 
   console.debug('params: ', params);

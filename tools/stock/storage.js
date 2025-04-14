@@ -80,6 +80,7 @@ export async function persist(retailer, params) {
 
     if (_persisted.recent.length > MAX_PERSISTED_SEARCHES) {
       // prune older searches
+      console.debug(`pruning recent searches from ${_persisted.recent.length} to ${MAX_PERSISTED_SEARCHES}`);
       touched = true;
       const removedIds = _persisted.recent.splice(MAX_PERSISTED_SEARCHES, _persisted.recent.length - 1);
       removedIds.forEach(rmId => {

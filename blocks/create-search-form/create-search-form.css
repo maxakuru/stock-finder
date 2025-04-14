@@ -14,6 +14,26 @@ details>summary>label {
   cursor: pointer;
 }
 
+div.notes {
+  position: relative;
+}
+
+div.notes::before {
+  content: ' ';
+  position: absolute;
+  border-left: solid #00000057 4px;
+  height: 100%;
+}
+
+div.notes p {
+  margin: 0.25em;
+  margin-inline-start: 0.8em;
+}
+
+div.notes p.error {
+  color: #c75151;
+}
+
 .block.create-search-form.retailer-target .disable-target {
   display: none;
 }

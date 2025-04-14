@@ -88,7 +88,7 @@ export function html(strs, ...params) {
 /**
  * @type {(
  *  msg: string, 
- *  lvl?: string, 
+ *  lvl?: 'info' | 'error' | 'success' | 'warning', 
  *  opts?: { isPop?: boolean; duration?: number; }
  * ) => void} msg
  */

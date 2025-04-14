@@ -54,6 +54,12 @@ export default async function decorate(block) {
       </details>      
 
       <button id="create">Create Search</button>
+
+      <span class="disable-gamestop disable-bestbuy">
+        <div class="notes">
+          <p class="error">Note: Target stock numbers are inaccurate for Pokemon cards, as their supplier does not update inventory numbers.</p>
+        </div>
+      </span>
     </form>`
 
   /** @type {HTMLInputElement} */

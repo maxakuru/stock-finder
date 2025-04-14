@@ -1,4 +1,4 @@
-import { html } from '../../scripts/scripts.js';
+import { html, toast } from '../../scripts/scripts.js';
 import {
   PERSIST_SEARCH_KEY,
   SESSION_KEY_ZIP,
@@ -307,8 +307,7 @@ async function renderLookupForm(retailer, params) {
     titleEl.innerText.replace('{sku}', sku);
     return await renderLookupForm(retailer, params);
   }
-
-  // otherwise this is to render the "add a search" view
-  // TODO: make a content page for this..
-
-})().catch(console.error);
+})().catch((e) => {
+  console.error(e);
+  toast('an error occured, try reloading', 'error');
+});

@@ -128,8 +128,13 @@ input {
   padding: 1em;
 }
 
+#lookup-results td {
+  font-size: 0.8em;
+}
+
 #lookup-results td.result-qty {
   text-align: center;
+  font-size: 0.9em;
 }
 
 #lookup-results td.result-qty.in-stock {
@@ -156,6 +161,10 @@ input {
 
   #lookup-results thead th.result-id {
     display: table-cell;
+  }
+
+  #lookup-results td {
+    font-size: 0.9em;
   }
 
   #lookup-results tbody td.result-id {
@@ -203,5 +212,13 @@ input {
 
   #lookup-results thead th.result-addr {
     width: 60%;
+  }
+
+  #lookup-results td {
+    font-size: 1em;
+  }
+
+  #lookup-results td.result-qty {
+    font-size: 1em;
   }
 }

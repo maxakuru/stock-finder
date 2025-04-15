@@ -112,7 +112,8 @@ input {
   display: none;
 }
 
-#lookup-results td.results-cta {
+#lookup-results td.result-cta,
+#lookup-results td.result-cta a {
   text-wrap-mode: nowrap;
 }
 

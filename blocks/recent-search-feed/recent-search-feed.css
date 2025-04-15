@@ -16,6 +16,11 @@
   gap: .2em;
 }
 
+.recent-carousel .carousel-item {
+  min-width: 200px;
+  max-width: 200px;
+}
+
 .recent-carousel .carousel-item a {
   display: flex;
   flex-direction: column;

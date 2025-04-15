@@ -112,6 +112,10 @@ input {
   display: none;
 }
 
+#lookup-results td.results-cta {
+  text-wrap-mode: nowrap;
+}
+
 #lookup-results tbody td span.result-mobile-id {
   font-weight: 500;
   white-space: nowrap;

@@ -1,7 +1,9 @@
+// @ts-check
 /**
  * @typedef {import('./types.d').LookupParams} LookupParams
  * @typedef {import('./types.d').PersistedSearchData} PersistedSearchData
  * @typedef {import('./types.d').SearchResults} SearchResults
+ * @typedef {import('./types.d').Retailer} Retailer
  */
 
 export const VERSION = 'v0';
@@ -17,10 +19,10 @@ const SUPERUSER_TOKEN_KEY = `superuser-token--${VERSION}`;
 
 const MAX_PERSISTED_SEARCHES = 100;
 
-/** @param {string} */
+/** @param {Retailer} retailer */
 const PERSIST_SEARCH_KEY = (retailer) => `persisted-search--${retailer}--${VERSION}`;
 
-/** @type {string|undefined} */
+/** @type {string|null} */
 let _token = localStorage.getItem(SUPERUSER_TOKEN_KEY);
 
 /** @type {PersistedSearchData} */
@@ -42,7 +44,7 @@ export async function digest(str, algo = 'SHA-1') {
 
 
 /** 
- * @param {string} [retailer]
+ * @param {Retailer} [retailer]
  * @returns {import("./types").PersistedSearchData}
  */
 export const getPersistedData = (retailer = 'bestbuy') => {
@@ -59,7 +61,7 @@ export const getPersistedData = (retailer = 'bestbuy') => {
 }
 
 /**
- * @param {string} retailer
+ * @param {Retailer} retailer
  * @param {LookupParams} params 
  */
 export async function persist(retailer, params) {
@@ -139,7 +141,7 @@ export async function shouldHalt() {
 
   if (_token && !(await isTokenValid())) {
     localStorage.removeItem(SUPERUSER_TOKEN_KEY);
-    _token = undefined;
+    _token = null;
   }
   if (!_token) {
     // get token from input
@@ -157,4 +159,5 @@ export async function shouldHalt() {
       return true;
     }
   }
+  return false;
 }

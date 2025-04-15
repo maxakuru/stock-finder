@@ -1,3 +1,5 @@
+export type Retailer = 'target' | 'bestbuy' | 'gamestop';
+
 export interface LookupParams {
   sku: string;
   image?: string;

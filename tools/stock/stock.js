@@ -11,6 +11,7 @@ import {
  * @typedef {import('./types.d').LookupParams} LookupParams
  * @typedef {import('./types.d').PersistedSearchData} PersistedSearchData
  * @typedef {import('./types.d').SearchResults} SearchResults
+ * @typedef {import('./types.d').Retailer} Retailer
  */
 
 /** @type {HTMLTitleElement} */
@@ -36,6 +37,12 @@ const btnOpenPDP = document.querySelector('a#form-action-open');
 /** @type {HTMLLinkElement} */
 const btnShareSearch = document.querySelector('a#form-action-share');
 
+/**
+ * 
+ * @param {Retailer} retailer 
+ * @param {string|number} sku 
+ * @returns 
+ */
 const PDP_URL = (retailer, sku) => {
   switch (retailer) {
     case 'target':
@@ -48,14 +55,14 @@ const PDP_URL = (retailer, sku) => {
 }
 
 /**
- * @param {string} retailer 
+ * @param {Retailer} retailer 
  * @param {string} sku 
  * @param {string} zip 
- * @returns {Promise<SearchResults>}
+ * @returns {Promise<SearchResults|null>}
  */
 async function fetchStock(retailer, sku, zip) {
   if (!retailer) {
-    return undefined;
+    return null;
   }
 
   const resp = await callAPI(`/stock/${retailer}`, undefined, { sku, zip });
@@ -73,10 +80,11 @@ async function fetchStock(retailer, sku, zip) {
 }
 
 /**
+ * @param {Retailer} retailer
  * @param {SearchResults} results 
  * @returns {Promise<void>}
  */
-async function renderLookupResults(results) {
+async function renderLookupResults(retailer, results) {
   const { items, locations } = results ?? { items: [], locations: [] };
   console.log('results: ', results, items, locations);
   if (!(items ?? []).length) {
@@ -138,7 +146,7 @@ async function renderLookupResults(results) {
           </td>
           <td class="result-qty ${qty > 0 ? 'in' : 'out-of'}-stock">${String(qty)}</td>
           <td class="result-cta">
-            (<a target="_blank" rel="noopener noreferrer" href="https://maps.google.com/?q=${address} ${city} ${state} ${zipCode}">Map</a>)
+            (<a target="_blank" rel="noopener noreferrer" href="https://maps.google.com/?q=${retailer} ${address} ${city} ${state} ${zipCode}">Map</a>)
           </td>
         </tr>
       </table>`.firstElementChild.firstElementChild;
@@ -158,7 +166,7 @@ function isValidZipcode(zip) {
 }
 
 /**
- * @param {string} retailer
+ * @param {Retailer} retailer
  * @param {LookupParams} params 
  * @returns {Promise<void>}
  */
@@ -220,7 +228,7 @@ async function renderLookupForm(retailer, params) {
     const sparams = new URLSearchParams(location.search);
     sparams.set('zipcode', zipcode);
     window.history.pushState('', '', `?${sparams}`)
-    renderLookupResults(results);
+    renderLookupResults(retailer, results);
     btnLookupSubmit.disabled = false;
   });
 

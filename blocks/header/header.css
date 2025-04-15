@@ -39,6 +39,29 @@ header nav[aria-expanded='true'] {
   min-height: 100dvh;
 }
 
+header nav .nav-brand a {
+  display: flex;
+  align-items: anchor-center;
+}
+
+header nav .nav-brand a span.icon {
+  height: var(--nav-height);
+  width: fit-content;
+}
+
+header nav .nav-brand a span.icon img {
+  height: var(--nav-height);
+  width: fit-content;
+}
+
+header nav .nav-tools {
+  visibility: hidden;
+}
+
+header nav[aria-expanded='true'] .nav-tools {
+  visibility: visible;
+}
+
 header nav .nav-tools ul {
   list-style-type: none;
   padding-inline-start: 0;

@@ -41,6 +41,7 @@ header nav[aria-expanded='true'] {
 
 header nav .nav-tools ul {
   list-style-type: none;
+  padding-inline-start: 0;
 }
 
 @media (width >=900px) {

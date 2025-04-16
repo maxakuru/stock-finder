@@ -6,7 +6,7 @@
  * @typedef {import('./types.d').Retailer} Retailer
  */
 
-import { toast } from '../../scripts/scripts';
+import { toast } from '../../scripts/scripts.js';
 
 export const VERSION = 'v0';
 export const AUTH_ENABLED = false;

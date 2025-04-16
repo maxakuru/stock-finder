@@ -6,6 +6,8 @@
  * @typedef {import('./types.d').Retailer} Retailer
  */
 
+import { toast } from '../../scripts/scripts';
+
 export const VERSION = 'v0';
 export const AUTH_ENABLED = false;
 export const DEV = ['localhost', '127.0.0.1'].includes(window.location.hostname);
@@ -114,7 +116,8 @@ export async function callAPI(path, opts = {}, params = {}) {
     }
   });
   if (!resp.ok) {
-    console.error('failed to call api: ', resp);
+    toast(`${resp.headers.get('x-error') ?? 'an error occurred'} (${resp.status})`, 'error');
+    console.error(resp);
   }
   return resp;
 }
@@ -128,6 +131,7 @@ async function isTokenValid() {
   if (res.ok) {
     return true;
   }
+  toast('access denied', 'error');
   return false;
 }
 

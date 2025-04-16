@@ -67,6 +67,8 @@ async function fetchStock(retailer, sku, zip) {
 
   const resp = await callAPI(`/stock/${retailer}`, undefined, { sku, zip });
   if (!resp.ok) {
+    toast(`${resp.headers.get('x-error') ?? 'an error occurred'} (${resp.status})`, 'error');
+    console.error(resp);
     return null;
   }
   const data = await resp.json();

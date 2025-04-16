@@ -1,4 +1,5 @@
 import { readBlockConfig } from "../../scripts/aem.js";
+import { toast } from "../../scripts/scripts.js";
 import { callAPI, shouldHalt } from "../../tools/stock/storage.js";
 
 const EXPECTS_SKU = {
@@ -148,6 +149,8 @@ export default async function decorate(block) {
 
     const resp = await callAPI(`/ops/extract`, undefined, { url });
     if (!resp.ok) {
+      toast(`${resp.headers.get('x-error') ?? 'an error occurred'} (${resp.status})`, 'error');
+      console.error(resp);
       urlInput.setCustomValidity(`Failed to fetch: ${resp.status}`);
       urlInput.addEventListener('input', () => {
         urlInput.setCustomValidity('');

@@ -127,13 +127,21 @@ async function renderLookupResults(retailer, results) {
 
       const pickupQty = itemLocation?.availability?.availablePickupQuantity;
       const inStoreQty = itemLocation?.inStoreAvailability?.availableInStoreQuantity;
-      if (pickupQty && inStoreQty && pickupQty !== inStoreQty) {
+      if (typeof pickupQty !== 'undefined'
+        && typeof inStoreQty !== 'undefined'
+        && pickupQty !== inStoreQty) {
         console.warn('mismatched quantity: ', location);
       }
 
-      let qty = Math.max(pickupQty, inStoreQty) ?? 0;
-      if (Number.isNaN(qty)) {
-        qty = 0;
+      /** @type {number|boolean} */
+      let qty;
+      if (typeof pickupQty === 'boolean' && typeof inStoreQty === 'boolean') {
+        qty = pickupQty || inStoreQty;
+      } else {
+        qty = Math.max(pickupQty, inStoreQty) ?? 0;
+        if (Number.isNaN(qty)) {
+          qty = 0;
+        }
       }
       const { id, address, city, state, zipCode } = location;
 

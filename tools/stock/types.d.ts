@@ -1,4 +1,4 @@
-export type Retailer = 'target' | 'bestbuy' | 'gamestop';
+export type Retailer = 'target' | 'bestbuy' | 'gamestop' | 'walmart';
 
 export interface LookupParams {
   sku: string;
@@ -13,15 +13,13 @@ export interface PersistedSearchData {
 }
 
 interface DayTimeMap {
-  [key: |
-    'Monday' |
-    'Tuesday' |
-    'Wednesday' |
-    'Thursday' |
-    'Friday' |
-    'Saturday' |
-    'Sunday'
-  ]: string; // "10:00:00.000"
+  Monday: string; // eg. "10:00:00.000"
+  Tuesday: string;
+  Wednesday: string;
+  Thursday: string;
+  Friday: string;
+  Saturday: string;
+  Sunday: string;
 }
 
 export interface SearchResultLocation {

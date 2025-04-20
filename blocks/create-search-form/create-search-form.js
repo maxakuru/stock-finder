@@ -40,7 +40,7 @@ export default async function decorate(block) {
     return;
   }
 
-  const skuPlaceholder = new Array(SKU_LENGTHS[config.retailer] ?? 6).fill(0).map((_, i) => i + 1).join('');
+  const skuPlaceholder = new Array(SKU_LENGTHS[config.retailer] ?? 6).fill(0).map((_, i) => i % 9 + 1).join('');
 
   block.innerHTML = `\
     <form>

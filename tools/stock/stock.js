@@ -46,9 +46,11 @@ const btnShareSearch = document.querySelector('a#form-action-share');
 const PDP_URL = (retailer, sku) => {
   switch (retailer) {
     case 'target':
-      return `https://www.target.com/p/urlkey/-/A-${sku}`;
+      return `https://www.target.com/p/snormax/-/A-${sku}`;
     case 'bestbuy':
-      return `https://www.bestbuy.com/site/urlkey/${sku}.p?skuId=${sku}`;
+      return `https://www.bestbuy.com/site/snormax/${sku}.p?skuId=${sku}`;
+    case 'walmart':
+      return `https://www.walmart.com/ip/snormax/${sku}`;
     default:
       return '#';
   }

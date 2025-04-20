@@ -4,13 +4,16 @@ import { callAPI, shouldHalt } from "../../tools/stock/storage.js";
 
 const EXPECTS_SKU = {
   target: '8-digit number', // ignore the 10 digits that are allowed, since those seem to be 3rd party
-  bestbuy: '7-digit number'
+  bestbuy: '7-digit number',
+  gamestop: '6-digit number',
+  walmart: '10 to 12-character string'
 }
 
 const SKU_LENGTHS = {
   target: 8,
   bestbuy: 7,
-  gamestop: 6
+  gamestop: 6,
+  walmart: 10
 }
 
 const isValidSku = (retailer, sku) => {
@@ -18,6 +21,10 @@ const isValidSku = (retailer, sku) => {
     return /^\d{8,10}$/.test(sku);
   } else if (retailer === 'bestbuy') {
     return /^\d{7}$/.test(sku);
+  } else if (retailer === 'gamestop') {
+    return /^\d{6}$/.test(sku);
+  } else if (retailer === 'walmart') {
+    return /^[a-zA-Z0-9]{10,12}$/.test(sku);
   }
   return true;
 }
@@ -64,9 +71,14 @@ export default async function decorate(block) {
 
       <button id="create">Create Search</button>
 
-      <span class="disable-gamestop disable-bestbuy">
+      <span class="disable-gamestop disable-bestbuy disable-walmart">
         <div class="notes">
           <p class="error"><b>Note:</b> Target stock numbers are inaccurate for <b>Pokemon cards</b>, as their supplier does not update inventory numbers.</p>
+        </div>
+      </span>
+      <span class="disable-gamestop disable-bestbuy disable-target">
+        <div class="notes">
+          <p class="error"><b>Note:</b> Walmart does not provide specific quantities, only in/out of stock. Inventory state is relatively <b>inaccurate</b>, your results may vary.</p>
         </div>
       </span>
     </form>`

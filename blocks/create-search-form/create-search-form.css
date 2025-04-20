@@ -48,6 +48,10 @@ div.notes p.error {
   display: none;
 }
 
+.block.create-search-form.retailer-walmart .disable-walmart {
+  display: none;
+}
+
 @media (width >=900px) {
   div.notes p {
     font-size: 1em;

@@ -156,7 +156,7 @@ async function renderLookupResults(retailer, results) {
             <span class="result-mobile-id">ID: ${id}<br/></span>
             ${address}, ${city}, ${state}
           </td>
-          <td class="result-qty ${qty > 0 ? 'in' : 'out-of'}-stock">${String(qty)}</td>
+          <td class="result-qty ${qty > 0 ? 'in' : 'out-of'}-stock">${String(qty > 999 ? '3+' : qty)}</td>
           <td class="result-cta">
             (<a target="_blank" rel="noopener noreferrer" href="https://maps.google.com/?q=${retailer} ${address} ${city} ${state} ${zipCode}">Map</a>)
           </td>

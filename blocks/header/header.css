@@ -93,6 +93,7 @@ header nav p {
 
 header nav a:any-link {
   color: currentcolor;
+  align-items: center;
 }
 
 /* hamburger */

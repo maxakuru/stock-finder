@@ -140,7 +140,7 @@ async function renderLookupResults(retailer, results) {
       if (typeof pickupQty === 'boolean' && typeof inStoreQty === 'boolean') {
         qty = pickupQty || inStoreQty;
       } else {
-        qty = Math.max(pickupQty, inStoreQty) ?? 0;
+        qty = Math.max(pickupQty ?? 0, inStoreQty ?? 0) ?? 0;
         if (Number.isNaN(qty)) {
           qty = 0;
         }

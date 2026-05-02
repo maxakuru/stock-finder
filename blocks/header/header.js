@@ -171,12 +171,23 @@ export default async function decorate(block) {
     themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
   }
 
+  function updateLogo() {
+    const theme = getEffectiveTheme();
+    const icon = navBrand.querySelector('img[data-icon-name="snormax"]');
+    if (icon) {
+      icon.src = theme === 'dark'
+        ? '/icons/snormax-wire.svg'
+        : '/icons/snormax.svg';
+    }
+  }
+
   themeToggle.addEventListener('click', () => {
     const current = getEffectiveTheme();
     const next = current === 'dark' ? 'light' : 'dark';
     localStorage.setItem('theme', next);
     document.documentElement.setAttribute('data-theme', next);
     updateToggleIcon();
+    updateLogo();
   });
 
   const storedTheme = localStorage.getItem('theme');
@@ -184,6 +195,7 @@ export default async function decorate(block) {
     document.documentElement.setAttribute('data-theme', storedTheme);
   }
   updateToggleIcon();
+  updateLogo();
 
   navRight.append(themeToggle);
   nav.append(navRight);

@@ -1,6 +1,7 @@
 import { html, toast } from '../../scripts/scripts.js';
 import {
   SESSION_KEY_ZIP,
+  TURNSTILE_SITE_KEY,
   callAPI,
   getPersistedData,
   persist,
@@ -57,17 +58,20 @@ const PDP_URL = (retailer, sku) => {
 }
 
 /**
- * @param {Retailer} retailer 
- * @param {string} sku 
- * @param {string} zip 
+ * @param {Retailer} retailer
+ * @param {string} sku
+ * @param {string} zip
+ * @param {string} turnstileToken
  * @returns {Promise<SearchResults|null>}
  */
-async function fetchStock(retailer, sku, zip) {
+async function fetchStock(retailer, sku, zip, turnstileToken) {
   if (!retailer) {
     return null;
   }
 
-  const resp = await callAPI(`/stock/${retailer}`, undefined, { sku, zip });
+  const resp = await callAPI(`/stock/${retailer}`, {
+    headers: { 'x-turnstile-token': turnstileToken },
+  }, { sku, zip });
   if (!resp.ok) {
     toast(`${resp.headers.get('x-error') ?? 'an error occurred'} (${resp.status})`, 'error');
     console.error(resp);
@@ -212,10 +216,50 @@ async function renderLookupForm(retailer, params) {
     searchImage.src = '/icons/broken-image.svg';
   }
 
+  // render turnstile widget
+  const turnstileContainer = document.querySelector('#turnstile-container');
+  /** @type {string|null} */
+  let turnstileToken = null;
+  /** @type {string|null} */
+  let turnstileWidgetId = null;
+  /** @type {((token: string) => void)|null} */
+  let turnstileResolve = null;
+
+  function renderTurnstile() {
+    if (typeof window.turnstile === 'undefined') {
+      // script not loaded yet, retry
+      setTimeout(renderTurnstile, 100);
+      return;
+    }
+    turnstileWidgetId = window.turnstile.render(turnstileContainer, {
+      sitekey: TURNSTILE_SITE_KEY,
+      callback: (token) => {
+        turnstileToken = token;
+        if (turnstileResolve) {
+          turnstileResolve(token);
+          turnstileResolve = null;
+        }
+      },
+      'expired-callback': () => { turnstileToken = null; },
+      'error-callback': () => { turnstileToken = null; },
+    });
+  }
+  renderTurnstile();
+
+  /**
+   * Wait for a turnstile token, resolving immediately if one is already available.
+   * @returns {Promise<string>}
+   */
+  function waitForTurnstileToken() {
+    if (turnstileToken) return Promise.resolve(turnstileToken);
+    return new Promise((resolve) => { turnstileResolve = resolve; });
+  }
+
   // set zipcode if provided, and perform lookup after render
   if (pzipcode && isValidZipcode(pzipcode)) {
     inputZipcode.value = pzipcode;
-    setTimeout(() => btnLookupSubmit.click());
+    // wait for turnstile before auto-submitting
+    waitForTurnstileToken().then(() => btnLookupSubmit.click());
   } else if (!pzipcode) {
     // not set from params, try to pull from session
     inputZipcode.value = inputZipcode.value || sessionStorage.getItem(SESSION_KEY_ZIP) || '';
@@ -233,10 +277,20 @@ async function renderLookupForm(retailer, params) {
       }, { once: true });
       return;
     }
+    if (!turnstileToken) {
+      toast('Please complete the verification challenge', 'error');
+      return;
+    }
     // store zipcode in session
     sessionStorage.setItem(SESSION_KEY_ZIP, zipcode);
     btnLookupSubmit.disabled = true;
-    const results = await fetchStock(retailer, sku, zipcode);
+    const token = turnstileToken;
+    const results = await fetchStock(retailer, sku, zipcode, token);
+    // reset turnstile for next submission
+    turnstileToken = null;
+    if (turnstileWidgetId !== null) {
+      window.turnstile.reset(turnstileWidgetId);
+    }
     const sparams = new URLSearchParams(location.search);
     sparams.set('zipcode', zipcode);
     window.history.pushState('', '', `?${sparams}`)

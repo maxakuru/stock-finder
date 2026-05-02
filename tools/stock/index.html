@@ -8,6 +8,7 @@
   <script src="/scripts/aem.js" type="module"></script>
   <script src="/scripts/scripts.js" type="module"></script>
   <link rel="stylesheet" href="/styles/styles.css" />
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
   <script src="/tools/stock/stock.js" type="module"></script>
   <link rel="stylesheet" href="/tools/stock/stock.css" />
 </head>
@@ -52,6 +53,8 @@
               <label for="zipcode">Zipcode</label>
               <input id="zipcode" name="zipcode" type="number" pattern="\d{5}" placeholder="Enter your zipcode"
                 required />
+
+              <div id="turnstile-container"></div>
 
               <div class="form-controls">
                 <button id="lookup-submit">Find Stock</button>

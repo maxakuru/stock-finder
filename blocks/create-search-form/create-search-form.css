@@ -1,59 +1,396 @@
-fieldset.horizontal {
-  display: flex;
+/* constrain the form section width */
+.section:has(.create-search-form)>div {
+  max-width: 860px;
 }
 
-fieldset.horizontal span.field {
-  width: 90%;
-}
-
-fieldset.horizontal .controls {
-  margin: 0 0 0 0.5em;
-}
-
-details>summary>label {
-  cursor: pointer;
-}
-
-div.notes {
+/* page header */
+.section:has(.create-search-form) .page-header {
+  margin-bottom: 42px;
+  padding: 24px;
   position: relative;
+  /* overflow-x: hidden; */
 }
 
-div.notes::before {
-  content: ' ';
+.section:has(.create-search-form) .page-header::after {
+  content: '';
   position: absolute;
-  border-left: solid var(--border-color) 4px;
-  height: 100%;
+  display: block;
+  border-bottom: 1px solid var(--border-color);
+  top: calc(100% - 1px);
+  width: 200vw;
+  transform: translateX(-50%);
 }
 
-div.notes p {
-  margin: 0.25em;
-  margin-inline-start: 0.8em;
-  line-height: 1.2;
-  font-size: 0.8em;
+.section:has(.create-search-form) .page-header-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono-font-family);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 8px;
 }
 
-div.notes p.error {
+.section:has(.create-search-form) .page-header-eyebrow .retailer-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+/* retailer pill colors */
+.section:has(.retailer-bestbuy) .retailer-pill {
+  background: var(--color-bb);
+  color: var(--color-bb-text);
+}
+
+.section:has(.retailer-walmart) .retailer-pill {
+  background: var(--color-wm);
+  color: var(--color-wm-text);
+}
+
+.section:has(.retailer-target) .retailer-pill {
+  background: var(--color-tg);
+  color: var(--color-tg-text);
+}
+
+.section:has(.retailer-gamestop) .retailer-pill {
+  background: var(--ink3);
+  color: #fff;
+}
+
+.section:has(.create-search-form) .page-header-title {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.section:has(.create-search-form) .page-header-sub {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--ink3);
+}
+
+/* form card container */
+.create-search-form {
+  border: 1px solid var(--border-color);
+  background: var(--background-color);
+  overflow: hidden;
+}
+
+/* colored stripe at top - per retailer */
+.create-search-form::before {
+  content: '';
+  display: block;
+  height: 3px;
+}
+
+.create-search-form.retailer-bestbuy::before {
+  background: var(--color-cta);
+}
+
+.create-search-form.retailer-walmart::before {
+  background: var(--color-cta);
+}
+
+.create-search-form.retailer-target::before {
+  background: var(--color-cta);
+}
+
+.create-search-form.retailer-gamestop::before {
+  background: var(--color-cta);
+}
+
+.create-search-form form {
+  padding: 24px 20px;
+}
+
+/* field group */
+.create-search-form .field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.create-search-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.create-search-form .field-label {
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--mono-font-family);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+
+.create-search-form .field-label .required {
+  color: var(--c-bb);
+  margin-left: 2px;
+}
+
+.create-search-form .field-input {
+  height: 44px;
+  background: var(--form-bg);
+  border: 1px solid var(--border-color);
+  color: var(--input-color);
+  font-family: var(--body-font-family);
+  font-size: 15px;
+  padding: 0 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  border-radius: 0;
+  /* width: 100%; */
+  margin: 0;
+  max-width: none;
+  display: block;
+}
+
+.create-search-form .field-input::placeholder {
+  color: var(--ink3);
+  font-family: var(--mono-font-family);
+  font-size: 13px;
+}
+
+.create-search-form .field-input:focus {
+  border-color: var(--c-bb);
+  background: var(--background-color);
+  box-shadow: 0 0 0 3px oklch(62% 0.18 250 / 0.12);
+}
+
+.create-search-form.retailer-walmart .field-input:focus {
+  border-color: var(--c-wm);
+  box-shadow: 0 0 0 3px oklch(62% 0.18 165 / 0.12);
+}
+
+.create-search-form.retailer-target .field-input:focus {
+  border-color: var(--c-tg);
+  box-shadow: 0 0 0 3px oklch(62% 0.18 30 / 0.12);
+}
+
+.create-search-form .field-hint {
+  font-size: 12px;
+  color: var(--ink3);
+  font-family: var(--mono-font-family);
+}
+
+/* two-col row */
+.create-search-form .field-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+/* extract accordion */
+.create-search-form .extract-accordion {
+  margin-top: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.create-search-form .extract-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: var(--body-font-family);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink2);
+  transition: background 0.15s, color 0.15s;
+  user-select: none;
+  margin: 0;
+  height: auto;
+}
+
+.create-search-form .extract-toggle:hover {
+  background: var(--bg2);
+  color: var(--text-color);
+}
+
+.create-search-form .extract-toggle-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.create-search-form .extract-toggle-icon svg {
+  width: 10px;
+  height: 10px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.create-search-form .extract-accordion.open .extract-toggle-icon {
+  transform: rotate(90deg);
+}
+
+.create-search-form .extract-body {
+  display: none;
+  padding: 16px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg2);
+}
+
+.create-search-form .extract-accordion.open .extract-body {
+  display: block;
+}
+
+.create-search-form .extract-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.create-search-form .extract-row .field {
+  flex: 1;
+}
+
+.create-search-form .extract-go-btn {
+  height: 44px;
+  padding: 0 20px;
+  background: var(--text-color);
+  color: var(--background-color);
+  border: none;
+  font-family: var(--body-font-family);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, opacity 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.create-search-form .extract-go-btn:hover {
+  background: var(--ink2);
+}
+
+.create-search-form .extract-go-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* submit area */
+.create-search-form .submit-area {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.create-search-form .submit-btn {
+  flex: 1;
+  height: 48px;
+  background: var(--color-cta);
+  color: #fff;
+  border: none;
+  font-family: var(--body-font-family);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+}
+
+/* .create-search-form.retailer-walmart .submit-btn {
+  background: var(--c-wm);
+}
+
+.create-search-form.retailer-target .submit-btn {
+  background: var(--c-tg);
+} */
+
+.create-search-form .submit-btn:hover {
+  box-shadow: 3px 3px 0 var(--text-color);
+}
+
+.create-search-form .submit-btn:active {
+  transform: scale(0.99);
+}
+
+.create-search-form .submit-btn-arrow {
+  font-size: 16px;
+  transition: transform 0.15s;
+}
+
+.create-search-form .submit-btn:hover .submit-btn-arrow {
+  transform: translateX(3px);
+}
+
+/* notes */
+.create-search-form .notes {
+  margin-top: 16px;
+  padding-left: 12px;
+  border-left: 3px solid var(--border-color);
+}
+
+.create-search-form .notes p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink2);
+}
+
+.create-search-form .notes p.error {
   color: var(--color-error);
 }
 
-.block.create-search-form.retailer-target .disable-target {
+/* retailer-specific hide rules */
+.create-search-form.retailer-target .disable-target {
   display: none;
 }
 
-.block.create-search-form.retailer-gamestop .disable-gamestop {
+.create-search-form.retailer-gamestop .disable-gamestop {
   display: none;
 }
 
-.block.create-search-form.retailer-bestbuy .disable-bestbuy {
+.create-search-form.retailer-bestbuy .disable-bestbuy {
   display: none;
 }
 
-.block.create-search-form.retailer-walmart .disable-walmart {
+.create-search-form.retailer-walmart .disable-walmart {
   display: none;
 }
 
-@media (width >=900px) {
-  div.notes p {
-    font-size: 1em;
+@media (width >=680px) {
+  .create-search-form form {
+    padding: 32px;
+  }
+
+  .create-search-form .field-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
   }
 }

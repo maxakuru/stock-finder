@@ -38,6 +38,10 @@ const btnOpenPDP = document.querySelector('a#form-action-open');
 /** @type {HTMLLinkElement} */
 const btnShareSearch = document.querySelector('a#form-action-share');
 
+if (lookupSection.parentElement) {
+  lookupSection.parentElement.classList.add('lookup-section');
+}
+
 /**
  * 
  * @param {Retailer} retailer 

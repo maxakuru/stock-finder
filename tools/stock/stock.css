@@ -1,11 +1,15 @@
 main {
-  max-width: 1200px;
+  max-width: 860px;
   margin: var(--nav-height) auto;
   min-height: calc(100vh - var(--nav-height));
 }
 
 .stock-tool div#lookup {
   display: none;
+}
+
+div.lookup-section {
+  margin-top: 32px;
 }
 
 div#lookup .form-actions svg .fill {
@@ -21,9 +25,9 @@ div#lookup .lookup-form {
   display: flex;
   justify-content: space-around;
   flex-direction: column;
-  padding: 1.5em;
-  background-color: var(--form-bg);
-  border-radius: 10px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
   position: relative;
 }
 
@@ -43,7 +47,7 @@ div#lookup .form-actions {
 div#lookup .lookup-form .display {
   display: flex;
   justify-content: space-around;
-  align-items: anchor-center;
+  align-items: center;
 }
 
 .lookup-form .display #search-image {
@@ -59,28 +63,42 @@ div#lookup .lookup-form .data-entry {
   margin: 0.6em 0;
 }
 
-label,
-input,
-button {
+.lookup-form label {
   width: 100%;
-}
-
-label,
-input {
   display: flex;
   flex-direction: column;
-}
-
-label {
   line-height: 1.4;
   font-weight: 500;
-  font-size: 16px;
-  color: var(--label-color);
+  font-size: 12px;
+  font-family: var(--mono-font-family);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink3);
 }
 
-input {
-  max-width: calc(100% - 8px);
+.lookup-form input {
+  width: 100%;
+  max-width: none;
+  display: block;
+  height: 44px;
+  background: var(--form-bg);
+  border: 1px solid var(--border-color);
+  color: var(--input-color);
+  font-family: var(--body-font-family);
+  font-size: 15px;
+  padding: 0 14px;
+  outline: none;
   margin-bottom: 0.4em;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.lookup-form input:focus {
+  border-color: var(--link-color);
+  box-shadow: 0 0 0 3px oklch(62% 0.18 250 / 0.12);
+}
+
+.lookup-form button {
+  margin: 0;
 }
 
 #lookup-results .no-results-message {
@@ -176,13 +194,13 @@ input {
   }
 
   #lookup-results tbody td span.result-mobile-id {
-    display: none
+    display: none;
   }
 }
 
 @media (width >=900px) {
   main {
-    margin: calc(var(--nav-height) / 2) auto;
+    margin: 0 auto;
   }
 
   h2#search-title {
@@ -193,6 +211,7 @@ input {
   div#lookup .lookup-form {
     flex-direction: row;
     gap: 2em;
+    padding: 32px;
   }
 
   div#lookup .form-actions {
@@ -204,10 +223,6 @@ input {
   .lookup-form .display #search-image {
     max-height: 300px;
     max-width: 300px;
-  }
-
-  input {
-    margin-bottom: 0.6em;
   }
 
   .lookup-form form .form-controls {

@@ -183,9 +183,21 @@ function buildHeroBlock(main) {
   const picture = main.querySelector('picture');
   // eslint-disable-next-line no-bitwise
   if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
+    const elems = [picture, h1];
+    // include the subtitle paragraph if it follows the h1
+    const subtitle = h1.nextElementSibling;
+    if (subtitle && subtitle.tagName === 'P' && !subtitle.querySelector('picture')) {
+      elems.push(subtitle);
+    }
+    // remember the source container before moving elements
+    const sourceDiv = picture.closest('div');
     const section = document.createElement('div');
-    section.append(buildBlock('hero', { elems: [picture, h1] }));
+    section.append(buildBlock('hero', { elems }));
     main.prepend(section);
+    // remove the source container if it's now empty or has only empty children
+    if (sourceDiv && !sourceDiv.textContent.trim()) {
+      sourceDiv.remove();
+    }
   }
 }
 

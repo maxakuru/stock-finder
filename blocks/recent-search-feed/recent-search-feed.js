@@ -1,40 +1,40 @@
-import { readBlockConfig } from "../../scripts/aem.js";
-import { html } from "../../scripts/scripts.js";
-import { getPersistedData } from "../../tools/stock/storage.js";
+import { readBlockConfig } from '../../scripts/aem.js';
+import { html } from '../../scripts/scripts.js';
+import { getPersistedData } from '../../tools/stock/storage.js';
 
-const RECENT_ITEM_LIMIT = 12; // max items to show
+const RECENT_ITEM_LIMIT = 12;
 
 /**
- * @param {import("../../tools/stock/types.js").PersistedSearchData['searches'][string]} item 
- * @returns {HTMLDivElement}
+ * @param {string} retailer
+ * @param {object} item
+ * @returns {HTMLElement|undefined}
  */
-const carouselItem = (retailer, item) => {
-  if (!item) {
-    return undefined;
-  }
-
+function recentItem(retailer, item) {
+  if (!item) return undefined;
   const { image, title, sku } = item;
-  const params = new URLSearchParams({ title, image });
-  const el = html`\
-    <div class="carousel-item">
-      <a class="search-link" href="/lookup/${retailer}/${sku}?${params}">
-        <img src="${image}"/>
-        <p>${title || sku}</p>
-      </a>
-    </div>`;
+  const params = new URLSearchParams({ title: title || '', image: image || '' });
 
-  // attach handlers
-  // TODO: allow delete?
-  const searchLink = el.querySelector('a.search-link');
-  const imageEl = searchLink.querySelector('img');
-  imageEl.onerror = () => {
-    imageEl.src = '/icons/broken-image.svg';
-  }
+  const el = html`\
+    <a class="recent-item" href="/lookup/${retailer}/${sku}?${params}">
+      <div class="recent-item-img-wrap">
+        <img src="${image || '/icons/broken-image.svg'}" alt="${title || sku}" loading="lazy" />
+      </div>
+      <div class="recent-item-body">
+        <div class="recent-item-title">${title || sku}</div>
+        <div class="recent-item-sku">${sku}</div>
+      </div>
+    </a>`;
+
+  const img = el.querySelector('img');
+  img.onerror = () => {
+    img.src = '/icons/broken-image.svg';
+  };
+
   return el;
 }
 
 /**
- * @param {HTMLDivElement} block 
+ * @param {HTMLDivElement} block
  */
 export default function decorate(block) {
   const config = readBlockConfig(block);
@@ -47,29 +47,38 @@ export default function decorate(block) {
   }
 
   const data = getPersistedData(config.retailer);
-  console.log(`retrieved persisted for ${config.retailer}: `, data);
   const recent = data.recent.slice(0, RECENT_ITEM_LIMIT);
-  const items = recent.map(id => carouselItem(config.retailer, data.searches[id])).filter(Boolean);
+  const items = recent.map((id) => {
+    const search = data.searches[id];
+    return search ? recentItem(config.retailer, search) : undefined;
+  }).filter(Boolean);
+
+  block.innerHTML = `\
+    <div class="recent-header">
+      <div class="recent-label">History</div>
+      <div class="recent-heading">Recent Searches</div>
+      <div class="recent-rule"></div>
+      <div class="recent-count"></div>
+    </div>
+    <div class="recent-scroll">
+      <div class="recent-row"></div>
+    </div>
+    <div class="recent-empty">No recent searches yet</div>`;
+
+  const row = block.querySelector('.recent-row');
+  const empty = block.querySelector('.recent-empty');
+  const countEl = block.querySelector('.recent-count');
 
   if (!items.length) {
-    // nothing to show
-    console.log('no recent searches: ', recent, items);
-    block.remove();
+    empty.style.display = 'block';
+    row.style.display = 'none';
+    countEl.textContent = '';
     return;
   }
 
-  block.innerHTML = `\
-    <div class="recent-carousel">
-      <h3>Recent Searches</h3>
-      <div class="carousel"></div>
-    </div>`;
+  empty.style.display = 'none';
+  row.style.display = 'flex';
+  countEl.textContent = `${items.length} item${items.length !== 1 ? 's' : ''}`;
 
-  /** @type {HTMLElement} */
-  const carousel = block.querySelector('.carousel');
-  carousel.style.width = `calc( ${recent.length} * 200px)`;
-
-  // add items to carousel
-  items.forEach(item => {
-    carousel.append(item);
-  });
+  items.forEach((item) => row.append(item));
 }

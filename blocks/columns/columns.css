@@ -1,10 +1,7 @@
 .columns > div {
   display: flex;
   flex-direction: column;
-}
-
-.columns img {
-  width: 100%;
+  gap: 32px;
 }
 
 .columns > div > div {
@@ -17,17 +14,77 @@
 
 .columns > div > .columns-img-col img {
   display: block;
+  width: 100%;
+}
+
+/* about-style columns: vertical border separators */
+.columns > div > div {
+  padding: 0 0 32px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.columns > div > div:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.columns > div > div p {
+  font-size: 14px;
+  color: var(--ink2);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.columns > div > div p strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-color);
+  margin-bottom: 8px;
+}
+
+/* eyebrow numbers */
+.columns > div > div p em {
+  display: block;
+  font-family: var(--mono-font-family);
+  font-size: 11px;
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 12px;
+}
+
+/* buttons within columns */
+.columns > div > div .button-container {
+  text-align: center;
+}
+
+.columns > div > div a.button {
+  min-width: 160px;
 }
 
 @media (width >= 900px) {
   .columns > div {
-    align-items: center;
-    flex-direction: unset;
-    gap: 24px;
+    align-items: stretch;
+    flex-direction: row;
+    gap: 0;
   }
 
   .columns > div > div {
     flex: 1;
     order: unset;
+    padding: 0 40px 0 0;
+    border-bottom: none;
+    border-right: 1px solid var(--border-color);
+    margin-right: 40px;
+  }
+
+  .columns > div > div:last-child {
+    border-right: none;
+    padding-right: 0;
+    margin-right: 0;
   }
 }

@@ -216,7 +216,7 @@ async function renderLookupForm(retailer, params) {
     searchImage.src = '/icons/broken-image.svg';
   }
 
-  // render turnstile widget
+  // turnstile state
   const turnstileContainer = document.querySelector('#turnstile-container');
   /** @type {string|null} */
   let turnstileToken = null;
@@ -224,13 +224,15 @@ async function renderLookupForm(retailer, params) {
   let turnstileWidgetId = null;
   /** @type {((token: string) => void)|null} */
   let turnstileResolve = null;
+  let turnstileRendered = false;
 
-  function renderTurnstile() {
+  function ensureTurnstile() {
+    if (turnstileRendered) return;
     if (typeof window.turnstile === 'undefined') {
-      // script not loaded yet, retry
-      setTimeout(renderTurnstile, 100);
+      setTimeout(ensureTurnstile, 100);
       return;
     }
+    turnstileRendered = true;
     turnstileWidgetId = window.turnstile.render(turnstileContainer, {
       sitekey: TURNSTILE_SITE_KEY,
       callback: (token) => {
@@ -244,22 +246,26 @@ async function renderLookupForm(retailer, params) {
       'error-callback': () => { turnstileToken = null; },
     });
   }
-  renderTurnstile();
 
   /**
-   * Wait for a turnstile token, resolving immediately if one is already available.
+   * Get a turnstile token, rendering the widget if needed and waiting for completion.
    * @returns {Promise<string>}
    */
-  function waitForTurnstileToken() {
+  function getTurnstileToken() {
     if (turnstileToken) return Promise.resolve(turnstileToken);
+    ensureTurnstile();
     return new Promise((resolve) => { turnstileResolve = resolve; });
   }
+
+  // track last successful lookup to avoid redundant API calls
+  /** @type {string|null} */
+  let lastLookupKey = null;
 
   // set zipcode if provided, and perform lookup after render
   if (pzipcode && isValidZipcode(pzipcode)) {
     inputZipcode.value = pzipcode;
-    // wait for turnstile before auto-submitting
-    waitForTurnstileToken().then(() => btnLookupSubmit.click());
+    // need turnstile for initial auto-submit
+    getTurnstileToken().then(() => btnLookupSubmit.click());
   } else if (!pzipcode) {
     // not set from params, try to pull from session
     inputZipcode.value = inputZipcode.value || sessionStorage.getItem(SESSION_KEY_ZIP) || '';
@@ -277,25 +283,41 @@ async function renderLookupForm(retailer, params) {
       }, { once: true });
       return;
     }
-    if (!turnstileToken) {
+
+    // skip if this exact lookup already succeeded
+    const lookupKey = `${retailer}/${sku}/${zipcode}`;
+    if (lookupKey === lastLookupKey) {
+      return;
+    }
+
+    // get a turnstile token, rendering the widget only if we don't have one
+    const token = await getTurnstileToken();
+    if (!token) {
       toast('Please complete the verification challenge', 'error');
       return;
     }
+
     // store zipcode in session
     sessionStorage.setItem(SESSION_KEY_ZIP, zipcode);
     btnLookupSubmit.disabled = true;
-    const token = turnstileToken;
     const results = await fetchStock(retailer, sku, zipcode, token);
-    // reset turnstile for next submission
+
+    // consume the token — reset widget for future lookups with a different zip
     turnstileToken = null;
     if (turnstileWidgetId !== null) {
       window.turnstile.reset(turnstileWidgetId);
     }
+
     const sparams = new URLSearchParams(location.search);
     sparams.set('zipcode', zipcode);
     window.history.pushState('', '', `?${sparams}`)
     renderLookupResults(retailer, results);
     btnLookupSubmit.disabled = false;
+
+    // only cache as successful if we got results
+    if (results) {
+      lastLookupKey = lookupKey;
+    }
   });
 
   // attach share link

@@ -16,7 +16,11 @@ export const API_ENDPOINT = DEV && !REMOTE_DEV
   ? 'http://localhost:8787'
   : 'https://api.snormax.com';
 export const SESSION_KEY_ZIP = `zipcode--${VERSION}`;
-export const TURNSTILE_SITE_KEY = '0x4AAAAAADHXE1GrmxE95F4n';
+// Cloudflare Turnstile test key (always passes) for local dev
+// https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+export const TURNSTILE_SITE_KEY = DEV
+  ? '1x00000000000000000000AA'
+  : '0x4AAAAAADHXE1GrmxE95F4n';
 
 const SUPERUSER_TOKEN_KEY = `superuser-token--${VERSION}`;
 

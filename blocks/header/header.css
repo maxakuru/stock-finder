@@ -309,6 +309,17 @@ header nav .nav-tools {
   grid-area: tools;
 }
 
+/* dark mode icon adjustments */
+:root[data-theme="dark"] header nav .icon-github img {
+  filter: invert(1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) header nav .icon-github img {
+    filter: invert(1);
+  }
+}
+
 /* theme toggle */
 header nav .theme-toggle {
   display: flex;

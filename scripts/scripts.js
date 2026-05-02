@@ -1,3 +1,9 @@
+// apply stored theme immediately to prevent flash
+(() => {
+  const stored = localStorage.getItem('theme');
+  if (stored) document.documentElement.setAttribute('data-theme', stored);
+})();
+
 import {
   buildBlock,
   loadHeader,

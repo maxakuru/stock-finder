@@ -8,6 +8,10 @@ main {
   display: none;
 }
 
+div#lookup .form-actions svg .fill {
+  fill: var(--text-color);
+}
+
 h2#search-title {
   margin-top: 0.6em;
   font-size: 1.4em;
@@ -18,7 +22,7 @@ div#lookup .lookup-form {
   justify-content: space-around;
   flex-direction: column;
   padding: 1.5em;
-  background-color: #f4f4f4;
+  background-color: var(--form-bg);
   border-radius: 10px;
   position: relative;
 }
@@ -71,7 +75,7 @@ label {
   line-height: 1.4;
   font-weight: 500;
   font-size: 16px;
-  color: #5b5252;
+  color: var(--label-color);
 }
 
 input {
@@ -80,7 +84,7 @@ input {
 }
 
 #lookup-results .no-results-message {
-  color: red;
+  color: var(--color-error);
 }
 
 #lookup-results table {
@@ -138,16 +142,16 @@ input {
 }
 
 #lookup-results td.result-qty.in-stock {
-  color: #0ba700;
+  color: var(--color-success);
   font-weight: 600;
 }
 
 #lookup-results td.result-qty.out-of-stock {
-  color: #c30000;
+  color: var(--color-error);
 }
 
 #lookup-results tr.result-row:not(.row-header):nth-child(odd) {
-  background-color: #f4f4f4;
+  background-color: var(--table-stripe);
 }
 
 @media (width >=500px) {

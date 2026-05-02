@@ -37,7 +37,7 @@
 .carousel-item p {
   font-size: 18px;
   line-height: 1.2;
-  color: #000;
+  color: var(--text-color);
   margin: .4em;
   text-align: center;
 }

@@ -5,7 +5,7 @@ header {
   width: 100%;
   min-height: var(--nav-height);
   height: var(--nav-height);
-  background-color: #fff;
+  background-color: var(--background-color);
   z-index: 9999;
   transition: height 0.2s, min-height 0.2s;
 }
@@ -307,4 +307,30 @@ header nav .nav-sections ul>li>ul>li {
 /* tools */
 header nav .nav-tools {
   grid-area: tools;
+}
+
+/* theme toggle */
+header nav .theme-toggle {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 6px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-color);
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  line-height: 1;
+}
+
+header nav .theme-toggle:hover {
+  background-color: var(--light-color);
+}
+
+header nav .theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  fill: currentcolor;
 }

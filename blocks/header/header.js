@@ -159,6 +159,44 @@ export default async function decorate(block) {
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
 
+  // theme toggle
+  const themeToggle = document.createElement('button');
+  themeToggle.className = 'theme-toggle';
+  themeToggle.setAttribute('aria-label', 'Toggle dark mode');
+  themeToggle.type = 'button';
+
+  const sunIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-3a1 1 0 0 0 1-1V1a1 1 0 0 0-2 0v2a1 1 0 0 0 1 1zm0 18a1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-2a1 1 0 0 0-1-1zM5.64 6.36a1 1 0 0 0 .7-.3 1 1 0 0 0 0-1.4l-1.4-1.42a1 1 0 1 0-1.42 1.42l1.42 1.4a1 1 0 0 0 .7.3zM19.07 18.36l-1.42 1.42a1 1 0 0 0 0 1.4 1 1 0 0 0 1.42 0l1.42-1.42a1 1 0 0 0-1.42-1.4zM4 12a1 1 0 0 0-1-1H1a1 1 0 0 0 0 2h2a1 1 0 0 0 1-1zm19-1h-2a1 1 0 0 0 0 2h2a1 1 0 0 0 0-2zM6.34 18.36a1 1 0 0 0-1.4 0l-1.42 1.42a1 1 0 0 0 0 1.4 1 1 0 0 0 1.42 0l1.4-1.42a1 1 0 0 0 0-1.4zM18.36 6.36a1 1 0 0 0 .7-.3l1.42-1.4a1 1 0 1 0-1.42-1.42l-1.4 1.42a1 1 0 0 0 0 1.4 1 1 0 0 0 .7.3z"/></svg>';
+  const moonIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.05 8.05 0 0 1-3.37.73A8.15 8.15 0 0 1 9.08 5.49a8.59 8.59 0 0 1 .25-2 1 1 0 0 0-.37-1 1 1 0 0 0-1.05-.14 10 10 0 1 0 13.73 11.59 1 1 0 0 0 0-.96z"/></svg>';
+
+  function getEffectiveTheme() {
+    const stored = localStorage.getItem('theme');
+    if (stored) return stored;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function updateToggleIcon() {
+    const theme = getEffectiveTheme();
+    themeToggle.innerHTML = theme === 'dark' ? sunIcon : moonIcon;
+    themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+
+  themeToggle.addEventListener('click', () => {
+    const current = getEffectiveTheme();
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', next);
+    document.documentElement.setAttribute('data-theme', next);
+    updateToggleIcon();
+  });
+
+  // apply stored theme on load
+  const storedTheme = localStorage.getItem('theme');
+  if (storedTheme) {
+    document.documentElement.setAttribute('data-theme', storedTheme);
+  }
+  updateToggleIcon();
+
+  nav.append(themeToggle);
+
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);

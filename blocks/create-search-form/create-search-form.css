@@ -21,7 +21,7 @@ div.notes {
 div.notes::before {
   content: ' ';
   position: absolute;
-  border-left: solid #00000057 4px;
+  border-left: solid var(--border-color) 4px;
   height: 100%;
 }
 
@@ -33,7 +33,7 @@ div.notes p {
 }
 
 div.notes p.error {
-  color: #c75151;
+  color: var(--color-error);
 }
 
 .block.create-search-form.retailer-target .disable-target {

@@ -451,7 +451,7 @@ main .toast-container {
   min-height: 40px;
   align-items: center;
   flex-direction: column;
-  margin: 0;
+  margin: 0 !important;
   overflow-y: hidden;
   top: calc(var(--nav-height) + var(--toast-top-pad));
   transition: top 0.3s;

@@ -1,5 +1,5 @@
 main {
-  max-width: 860px;
+  max-width: 1200px;
   margin: var(--nav-height) auto;
   min-height: calc(100vh - var(--nav-height));
 }
@@ -8,7 +8,7 @@ main {
   display: none;
 }
 
-div.lookup-section {
+main>.section>div.lookup-section {
   margin-top: 32px;
 }
 

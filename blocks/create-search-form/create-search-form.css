@@ -1,6 +1,6 @@
 /* constrain the form section width */
 .section:has(.create-search-form)>div {
-  max-width: 860px;
+  max-width: 1200px;
 }
 
 /* page header */
